@@ -430,7 +430,7 @@
 			//var i = 0;
 			//for (var i = 0; i < 10; i++){
 				//console.log("loop: ", i);
-				/*ouapi.createFile("OMNI", "/_dev/leb/ouapi_test", "file"+i+".html", true).then(
+				/*ouapi.createFile("file"+i+".html", "/_dev/leb/ouapi_test", "OMNI", true).then(
 					function(data){
 						console.log("file"+i+".html - then() success data: ", data);
 					},
@@ -440,7 +440,7 @@
 				);*/
 				
 				
-				/*ouapi.createSnippetCategory("_test", "Category "+i).then(
+				/*ouapi.createSnippetCategory("Category "+i, "_test").then(
 					function(data){
 						console.log("Category "+i+" - then() success data: ", data);
 					},
@@ -449,7 +449,7 @@
 					}
 				);*/
 				
-				/*ouapi.getFiles('www', '/').then(
+				/*ouapi.getFiles('/', 'www').then(
 					function(data){
 						console.log("then() success");
 						console.log("then() success data: ", data);
@@ -491,7 +491,7 @@
 		
 		for (var i = 0; i < 11; i++){
 				console.log("loop: ", i);
-				ouapi.files.create("OMNI", "/_dev/leb/ouapi_test", "file"+i+".html", false).then(
+				ouapi.files.create("file"+i+".html", "/_dev/leb/ouapi_test", "OMNI", false).then(
 					function(data){
 						console.log("file"+data.methodData.params.filename+".html - then() success data: ", data);
 					},
@@ -505,7 +505,7 @@
 				
 				
 				
-				/*ouapi.snippets.createCategory("_test", "Category "+i).then(
+				/*ouapi.snippets.createCategory("Category "+i, "_test").then(
 					function(data){
 						console.log("Category "+data.methodData.params.category+" - then() success data: ", data);
 					},
@@ -514,7 +514,7 @@
 					}
 				);*/
 				
-				/*ouapi.getFiles('www', '/').then(
+				/*ouapi.getFiles('/', 'www').then(
 					function(data){
 						console.log("then() success");
 						console.log("then() success data: ", data);
@@ -527,7 +527,7 @@
 			}
 	}
     
-    /*ouapi.getFiles('www', '/').then(
+    /*ouapi.getFiles('/', 'www').then(
         function(data){
             console.log("then() success");
             console.log("then() success data: ", data);
@@ -537,7 +537,7 @@
             console.log("then() fail data: ", data);
         }
     );
-    ouapi.getFiles2('www', '/').then(
+    ouapi.getFiles2('/', 'www').then(
         function(data){
             console.log("getFiles2 success");
             console.log("then() success");
@@ -549,7 +549,7 @@
             console.log("then() fail data: ", data);
         }
     );
-    ouapi.getFiles3('www', '/').then(
+    ouapi.getFiles3('/', 'www').then(
         function(data){
             console.log("getFiles3 success");
             console.log("then() success");
@@ -561,7 +561,7 @@
             console.log("then() fail data: ", data);
         }
     );
-    ouapi.getFiles4('www', '/').then(
+    ouapi.getFiles4('/', 'www').then(
         function(data){
             console.log("getFiles4 success");
             console.log("then() success");
