@@ -1,0 +1,4 @@
+Parameter rules:
+-Order of precenese:
+    name -> path -> site
+-All functions must take a deferred object as the last argument
