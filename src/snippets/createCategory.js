@@ -1,4 +1,4 @@
-createCategory: function(site, name, deferred) {
+createCategory: function(name, site, deferred) {
     console.log("--createSnippetCategory--");
 
     var protocol = "http:";

@@ -1,4 +1,4 @@
-create: function(site, path, filename, overwrite, deferred) {
+create: function(filename, path, site, overwrite, deferred) {
     console.log("--createFile--");
 
     var protocol = "http:";

@@ -1,4 +1,4 @@
-removeCategory: function(site, name, deferred) {
+removeCategory: function(name, site, deferred) {
     console.log("--removeSnippetCategory--");
 
     var protocol = "http:";

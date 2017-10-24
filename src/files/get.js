@@ -1,4 +1,4 @@
-get: function(site, path, deferred) {
+get: function(path, site, deferred) {
     console.log("--getFiles--");
 
     var endpoint = gadget.get('apihost') + '/files/list';
