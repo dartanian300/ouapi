@@ -9,10 +9,12 @@
   "author": "Caleb Hardin",
   "license": "ISC",
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "del": "^3.0.0",
+    "gulp": "git+https://git@github.com/gulpjs/gulp.git#4.0",
     "gulp-concat": "^2.6.1",
     "gulp-file-insert": "^1.0.3",
-    "gulp-inject": "^4.3.0",
-    "merge-stream": "^1.0.1"
+    "gulp-uglify": "^3.0.0",
+    "path": "^0.12.7",
+    "q": "^1.5.1"
   }
 }
