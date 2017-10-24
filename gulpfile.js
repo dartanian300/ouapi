@@ -1,3 +1,4 @@
+// Built for Gulp v4
 var
     // modules
     gulp = require('gulp'),
@@ -8,9 +9,7 @@ var
     Q = require('q'),
     uglify = require('gulp-uglify'),
     
-    // look at merge-stream
-
-    // development mode?
+    // development mode
     devBuild = (process.env.NODE_ENV !== 'production'),
 
     // folders
@@ -22,29 +21,12 @@ var
 ;
 
 
-var scriptsPath = 'snippets';
-
 var data = {
     "/* insert:snippets */": 'snippets',
     "/* insert:files */": 'files',
     "/* insert:reports */": 'reports',
     "/* insert:callbacks */": 'callbacks'
 };
-
-//function getFolders(dir) {
-//    return fs.readdirSync(dir)
-//      .filter(function(file) {
-//        return fs.statSync(path.join(dir, file)).isDirectory();
-//      });
-//}
-
-//(function(i){
-//        result.push(secondFunc(data[i].item)
-//        .then(function(data2) {
-//            data[i].more = data2.item;
-//            return data[i];
-//        }));
-//    })(i);
 
 gulp.task('concat:js', function () {
     console.log("concat:js runs");
