@@ -1,6 +1,8 @@
-node_modules/
+# system files
+.DS_Store
 
 # temporary locations
 temp/
 
-.DS_Store
+# packages
+node_modules/
