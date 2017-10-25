@@ -238,6 +238,10 @@
             /* insert:files */
         },
 
+        directories: {
+            /* insert:directories */
+        },
+        
         sites: {
             /* insert:sites */
         },
