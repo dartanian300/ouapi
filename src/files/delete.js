@@ -14,7 +14,7 @@ delete: function(path, site, remote = false, deferred) {
     ajaxC({
         type: "POST",
         url: endpoint, 
-        data: params, true,
+        data: $.param(params, true),
         deferred: deferred
     });
     return deferred.promise();

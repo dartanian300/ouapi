@@ -1,4 +1,4 @@
-//TODO: test this & give default value 
+//TODO: test this
 add: function(name, path, site, description, category, deferred) {
     console.log("--addSnippet--");
 
@@ -12,7 +12,7 @@ add: function(name, path, site, description, category, deferred) {
         path: path,
         site: site,
         description: description,
-        category: name,
+        category: category
     };
     ajaxC({
         type: "POST",
@@ -22,14 +22,3 @@ add: function(name, path, site, description, category, deferred) {
     });
     return deferred.promise();
 }
-
-//name:Test name
-//site:OMNI
-//
-//snippet:Test name
-//path:Test path
-//
-//category:Calendars
-//description:Test description 
-
-
