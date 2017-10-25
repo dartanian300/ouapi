@@ -8,10 +8,13 @@ var
     del = require('del'),
     Q = require('q'),
     uglify = require('gulp-uglify'),
+    stripDebug = require('gulp-strip-debug'),
+    rename = require('gulp-rename'),
+    babel = require('gulp-babel'),
     
     // development mode
     devBuild = (process.env.NODE_ENV !== 'production'),
-
+    
     // folders
     folder = {
         src: 'src/',
@@ -20,12 +23,14 @@ var
     }
 ;
 
-
+// format: replaceString: foldername
 var data = {
     "/* insert:snippets */": 'snippets',
     "/* insert:files */": 'files',
     "/* insert:reports */": 'reports',
-    "/* insert:callbacks */": 'callbacks'
+    "/* insert:callbacks */": 'callbacks',
+    "/* insert:sites */": 'sites',
+    "/* insert:assets */": 'assets'
 };
 
 gulp.task('concat:js', function () {
@@ -61,7 +66,7 @@ gulp.task('inject:js', function(){
         replacements[type] = folder.tmp + data[type] + '.js';
     }
     
-    return gulp.src(folder.src+"index.html")
+    return gulp.src(folder.src+"ouapi.js")
     .pipe(gfi(replacements))
     .pipe(gulp.dest(folder.build));
 });
@@ -70,4 +75,19 @@ gulp.task('remove:tmp', function(){
     return del([folder.tmp+'*']);
 });
 
-gulp.task('default', gulp.series('concat:js', 'inject:js', 'remove:tmp'));
+gulp.task('clean:js', function(){
+    return gulp.src(folder.build + 'ouapi.js')
+    .pipe(babel())
+    //.pipe(stripDebug())
+    .pipe(gulp.dest(folder.build))
+    .pipe(rename('ouapi.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest(folder.build));
+});
+
+
+gulp.task('default',
+          gulp.series('concat:js', 'inject:js',          
+            gulp.parallel('remove:tmp', 'clean:js')
+          )
+);
