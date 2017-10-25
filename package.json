@@ -1,6 +1,6 @@
 {
   "name": "ouapi",
-  "version": "1.0.0",
+  "version": "0.1",
   "description": "JavaScript library for working with the OU Campus API",
   "main": "index.js",
   "scripts": {
@@ -9,10 +9,15 @@
   "author": "Caleb Hardin",
   "license": "ISC",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "del": "^3.0.0",
     "gulp": "git+https://git@github.com/gulpjs/gulp.git#4.0",
+    "gulp-babel": "^7.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-file-insert": "^1.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-strip-debug": "^1.1.0",
     "gulp-uglify": "^3.0.0",
     "path": "^0.12.7",
     "q": "^1.5.1"
