@@ -1,5 +1,6 @@
 create: function(filename, path, site, overwrite, deferred) {
     console.log("--createFile--");
+    if (typeof overwrite == 'undefined') overwrite = false;
 
     var protocol = "http:";
     var endpoint = /*protocol +*/ gadget.get('apihost') + '/templates/new';

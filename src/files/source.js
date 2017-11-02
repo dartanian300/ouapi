@@ -1,6 +1,6 @@
-//TODO: test this
-source: function(site, path, brokenTags = true, deferred) {
+source: function(site, path, brokenTags, deferred) {
     console.log("--removeSnippet--");
+    if (typeof brokenTags == 'undefined') brokenTags = true;
 
     var protocol = "http:";
     var endpoint = /*protocol +*/ gadget.get('apihost') + '/files/source';

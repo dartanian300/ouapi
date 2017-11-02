@@ -1,4 +1,3 @@
-//TODO: test this
 checkin: function(path, site, deferred) {
     console.log("--checkinFile--");
 

@@ -1,9 +1,8 @@
-//TODO: Not sure if this works - returns empty arrays - test this
-dependents: function(path, site, deferred) {
-    console.log("--fileDependents--");
+checkout: function(path, site, deferred) {
+    console.log("--checkoutFile--");
 
     var protocol = "http:";
-    var endpoint = /*protocol +*/ gadget.get('apihost') + '/files/dependents';
+    var endpoint = /*protocol +*/ gadget.get('apihost') + '/files/checkout';
     var params = {
         authorization_token: gadget.get('token'), 
 
@@ -11,7 +10,7 @@ dependents: function(path, site, deferred) {
         path: path,
     };
     ajaxC({
-        type: "GET",
+        type: "POST",
         url: endpoint, 
         data: params,
         deferred: deferred

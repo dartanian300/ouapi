@@ -1,4 +1,3 @@
-//TODO: test this
 checkedOut: function(site, deferred) {
     console.log("--checkedOutFiles--");
 

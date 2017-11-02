@@ -1,4 +1,3 @@
-//TODO: test this
 list: function(path, site, deferred) {
     console.log("--listFiles--");
 

@@ -7,8 +7,9 @@
     use_database: bool
     captcha: bool
 */
-newForm: function(name, site, description, group, readGroup, formContents, tags, lockToSite = true, extra, deferred) {
+newForm: function(name, site, description, group, readGroup, formContents, tags, lockToSite, extra, deferred) {
     console.log("--newFormAsset--");
+    if (typeof lockToSite == 'undefined') lockToSite = true;
 
     if (typeof extra == 'undefined')
         extra = {

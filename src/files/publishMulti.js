@@ -2,16 +2,23 @@
 publishMulti: function(paths,
                         site,
                         versionDesc,
-                        includeCheckedout = false,
-                        includeScheduled = false,
-                        includePendingApproval = false,
-                        changedOnly = false,
-                        useLastPublishedVersion = false,
-                        includeUnpublishedDependencies = true,
+                        includeCheckedout,
+                        includeScheduled,
+                        includePendingApproval,
+                        changedOnly,
+                        useLastPublishedVersion,
+                        includeUnpublishedDependencies,
                         deferred)
 {
     console.log("--publishMultiFile--");
-
+    if (typeof includeCheckedout == 'undefined') includeCheckedout = false;
+    if (typeof includeScheduled == 'undefined') includeScheduled = false;
+    if (typeof includePendingApproval == 'undefined') includePendingApproval = false;
+    if (typeof changedOnly == 'undefined') changedOnly = false;
+    if (typeof useLastPublishedVersion == 'undefined') useLastPublishedVersion = false;
+    if (typeof includeUnpublishedDependencies == 'undefined') includeUnpublishedDependencies = true;
+    
+    
     var protocol = "http:";
     var endpoint = /*protocol +*/ gadget.get('apihost') + '/files/multipublish';
     var params = {

@@ -1,7 +1,8 @@
 // TODO: test this
 // tags can be an array
-newWebContent: function(name, site, description, group, readGroup, content, tags, lockToSite = true, deferred) {
+newWebContent: function(name, site, description, group, readGroup, content, tags, lockToSite, deferred) {
     console.log("--newWebContentAsset--");
+    if (typeof lockToSite == 'undefined') lockToSite = true;
 
     var endpoint = gadget.get('apihost') + '/assets/new';
     var params = {

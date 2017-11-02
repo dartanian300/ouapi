@@ -10,8 +10,9 @@
     isRegex: bool
     matchCase: bool
 */
-newSourceCode: function(name, site, description, group, readGroup, content, tags, lockToSite = true, extra = {}, deferred) {
+newSourceCode: function(name, site, description, group, readGroup, content, tags, lockToSite, extra = {}, deferred) {
     console.log("--newSourceCodeAsset--");
+    if (typeof lockToSite == 'undefined') lockToSite = true;
 
     var endpoint = gadget.get('apihost') + '/assets/new';
     var params = {

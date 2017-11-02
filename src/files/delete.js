@@ -1,6 +1,7 @@
 // TODO: test this
-delete: function(path, site, remote = false, deferred) {
+delete: function(path, site, remote, deferred) {
     console.log("--deleteFile/Folder--");
+    if (typeof remote == 'undefined') remote = false;
 
     var endpoint = gadget.get('apihost') + '/files/delete';
     var params = {

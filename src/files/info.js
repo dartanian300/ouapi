@@ -1,9 +1,8 @@
-//TODO: Not sure if this works - returns empty arrays - test this
-dependents: function(path, site, deferred) {
-    console.log("--fileDependents--");
+info: function(path, site, deferred) {
+    console.log("--fileInfo--");
 
     var protocol = "http:";
-    var endpoint = /*protocol +*/ gadget.get('apihost') + '/files/dependents';
+    var endpoint = /*protocol +*/ gadget.get('apihost') + '/files/info';
     var params = {
         authorization_token: gadget.get('token'), 
 

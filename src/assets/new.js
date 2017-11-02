@@ -47,27 +47,6 @@ new: function(){}
     image:ae63de1e-4e31-472e-b3a2-700f972bc54c.jpg
     */
 
-/*
-Assets Info:
-
-GET
-assets/info
-
-Params:
-site:_test
-asset:145350
-*/
-
-/*
-View Assets:
-
-GET
-assets/view
-
-Params:
-site:_test
-asset:145350
-*/
 
 /*
 Assets Save (same endpoint as image gallery save - same for all 3 text-based assets):

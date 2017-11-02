@@ -7,8 +7,9 @@
     force_crop: bool
     advanced: string
 */
-newImageGallery: function(name, site, description, group, readGroup, tags, lockToSite = true, extra, deferred) {
+newImageGallery: function(name, site, description, group, readGroup, tags, lockToSite, extra, deferred) {
     console.log("--newImageGalleryAsset--");
+    if (typeof lockToSite == 'undefined') lockToSite = true;
 
     if (typeof extra == 'undefined')
         extra = {
