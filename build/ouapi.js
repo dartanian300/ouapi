@@ -22,18 +22,20 @@
         requestsSuccessful: 0, // # requests that were successfully resolved --
         requestsFailed: 0, // # requests that were rejected --
         requestsPending: 0 // # requests currently processing
+    };
 
+    var isReady = false;
 
-        // 		debug(dequeue);
-        // 		debug(checkQueue);
-        // 		debug(closeConnection);
-        // 		debug(ajaxC);
-        // 		debug(callNext);
+    // 		debug(dequeue);
+    // 		debug(checkQueue);
+    // 		debug(closeConnection);
+    // 		debug(ajaxC);
+    // 		debug(callNext);
 
-        /**
-            Calls next queued request (after delay & sometimes delayAfter)
-        */
-    };function dequeue() {
+    /**
+        Calls next queued request (after delay & sometimes delayAfter)
+    */
+    function dequeue() {
         console.log("--dequeue--");
         debugger;
         //             closeConnection();
@@ -77,7 +79,7 @@
         debugger;
         // don't try to call more methods than are queued
         num = num <= queue.length ? num : queue.length;
-        for (i = 0; i < num; i++) {
+        for (var i = 0; i < num; i++) {
             var method = queue.shift();
             method.func.apply(ouapi, method.args);
         }
@@ -183,6 +185,8 @@
         @return bool
     */
     function isPromise(x) {
+        if (typeof x == 'undefined') return false;
+
         if (x.promise && !isDeferred(x)) return true;
         return false;
     }
@@ -192,6 +196,8 @@
         @return bool
     */
     function isDeferred(x) {
+        if (typeof x == 'undefined') return false;
+
         if (x.promise && x.notify) return true;
         return false;
     }
@@ -224,7 +230,6 @@
 
     var ouapi = {
         snippets: {
-            //TODO: test this
             add: function add(name, path, site, description, category, deferred) {
                 console.log("--addSnippet--");
 
@@ -267,6 +272,44 @@
                 });
                 return deferred.promise();
             },
+            list: function list(site, deferred) {
+                console.log("--listSnippets/Categories--");
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/list';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site
+                };
+                ajaxC({
+                    type: "GET",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            },
+            remove: function remove(name, site, category, deferred) {
+                console.log("--removeSnippet--");
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/removesnippet';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    snippet: name,
+                    site: site,
+                    category: category
+                };
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            },
             removeCategory: function removeCategory(name, site, deferred) {
                 console.log("--removeSnippetCategory--");
 
@@ -289,7 +332,6 @@
         },
 
         files: {
-            //TODO: test this
             checkedOut: function checkedOut(site, deferred) {
                 console.log("--checkedOutFiles--");
 
@@ -308,7 +350,6 @@
                 });
                 return deferred.promise();
             },
-            //TODO: test this
             checkin: function checkin(path, site, deferred) {
                 console.log("--checkinFile--");
 
@@ -328,8 +369,28 @@
                 });
                 return deferred.promise();
             },
+            checkout: function checkout(path, site, deferred) {
+                console.log("--checkoutFile--");
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/files/checkout';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    path: path
+                };
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            },
             create: function create(filename, path, site, overwrite, deferred) {
                 console.log("--createFile--");
+                if (typeof overwrite == 'undefined') overwrite = false;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/templates/new';
@@ -353,11 +414,9 @@
                 return deferred.promise();
             },
             // TODO: test this
-            delete: function _delete(path, site) {
-                var remote = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-                var deferred = arguments[3];
-
+            delete: function _delete(path, site, remote, deferred) {
                 console.log("--deleteFile/Folder--");
+                if (typeof remote == 'undefined') remote = false;
 
                 var endpoint = gadget.get('apihost') + '/files/delete';
                 var params = {
@@ -376,7 +435,7 @@
                 });
                 return deferred.promise();
             },
-            //TODO: test this
+            //TODO: Not sure if this works - returns empty arrays - test this
             dependents: function dependents(path, site, deferred) {
                 console.log("--fileDependents--");
 
@@ -407,6 +466,44 @@
                     path: path
                 };
 
+                ajaxC({
+                    type: "GET",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            },
+            info: function info(path, site, deferred) {
+                console.log("--fileInfo--");
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/files/info';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    path: path
+                };
+                ajaxC({
+                    type: "GET",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            },
+            list: function list(path, site, deferred) {
+                console.log("--listFiles--");
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/files/list';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    path: path
+                };
                 ajaxC({
                     type: "GET",
                     url: endpoint,
@@ -468,16 +565,14 @@
             wall_post:
             */
             , //TODO: test this
-            publishMulti: function publishMulti(paths, site, versionDesc) {
-                var includeCheckedout = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-                var includeScheduled = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-                var includePendingApproval = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
-                var changedOnly = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : false;
-                var useLastPublishedVersion = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : false;
-                var includeUnpublishedDependencies = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : true;
-                var deferred = arguments[9];
-
+            publishMulti: function publishMulti(paths, site, versionDesc, includeCheckedout, includeScheduled, includePendingApproval, changedOnly, useLastPublishedVersion, includeUnpublishedDependencies, deferred) {
                 console.log("--publishMultiFile--");
+                if (typeof includeCheckedout == 'undefined') includeCheckedout = false;
+                if (typeof includeScheduled == 'undefined') includeScheduled = false;
+                if (typeof includePendingApproval == 'undefined') includePendingApproval = false;
+                if (typeof changedOnly == 'undefined') changedOnly = false;
+                if (typeof useLastPublishedVersion == 'undefined') useLastPublishedVersion = false;
+                if (typeof includeUnpublishedDependencies == 'undefined') includeUnpublishedDependencies = true;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/multipublish';
@@ -546,18 +641,81 @@
                     deferred: deferred
                 });
                 return deferred.promise();
+            },
+            //TODO: test this
+            save: function save(path, site, content, deferred) {
+                console.log("--saveFile--");
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/files/save';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    path: path,
+                    text: content
+                };
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            },
+            source: function source(site, path, brokenTags, deferred) {
+                console.log("--removeSnippet--");
+                if (typeof brokenTags == 'undefined') brokenTags = true;
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/files/source';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    path: path,
+                    brokentags: brokenTags
+                };
+                ajaxC({
+                    type: "GET",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+        },
+
+        directories: {
+            //TODO: test this
+            settings: function settings(path, site, deferred) {
+                console.log("--directorySettings--");
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/directories/settings';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    path: path
+                };
+                ajaxC({
+                    type: "GET",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
             }
         },
 
         sites: {
             //TODO: test this
-            list: function list() {
-                var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5000;
-                var site = arguments[1];
-                var account = arguments[2];
-                var deferred = arguments[3];
-
+            list: function list(site, account, count, deferred) {
+                if (typeof count == 'undefined') count = 5000;
                 console.log("--sitesList--");
+
+                console.log("arguments: ", arguments);
 
                 if (typeof site == 'undefined') site = gadget.get('site');
                 if (typeof account == 'undefined') account = gadget.get('account');
@@ -582,7 +740,93 @@
         },
 
         assets: {
+            // I NEED TO LOOK AT THIS MORE - NOT DONE
+
             // TODO: test this
+            // TODO: figure out payload (file)
+            // asset Id is also the same as the dependency tag (only numbers)
+            add_image: function add_image(site, assetId, image, thumb_width, thumb_height, deferred) {
+                console.log("--assetAddImage--");
+                if (typeof thumb_width == 'undefined') thumb_width = 100;
+                if (typeof thumb_height == 'undefined') thumb_height = 100;
+
+                var form = new FormData();
+                var file = new File([fileContents], filename, { type: "image/jpeg" });
+                form.append(filename, file);
+
+                var endpoint = gadget.get('apihost') + '/assets/add_image';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    asset: assetId,
+                    image: image,
+                    thumb_width: thumb_width,
+                    thumb_height: thumb_height
+                };
+
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+
+            /*
+            Image Gallery Add Image:
+            
+            POST
+            assets/add_image
+            
+            Params:
+            Query string params:
+            site:_test
+            asset:145350
+            image:30b8bead-fd25-db48-0ebc-b02436df5212.jpg
+            thumb_width:100
+            thumb_height:100
+            
+            Has content payload (need to look at upload to get more info on how to do this)
+            */
+
+            /*function uploadFile(site, path, filename, fileContents, overwrite){
+            				console.log("upload file...");
+            				checkConnections();
+            				logConnections();
+            				var overwrite = (overwrite == true ? "true" : "false");
+            				var endpoint = gadget.get('apihost') + '/files/upload?site='+site+'&path='+path+'&overwrite='+overwrite+'&access=*inherit*&authorization_token='+gadget.get('token');
+            				
+            				// create uploadable file
+            				var form = new FormData();
+            				var file = new File([fileContents], filename, {type: "text/plain"});
+            				form.append(filename, file);
+            				
+            				var params = {
+            					file: file
+            				};
+            				
+            				console.log("sending request....");
+            				return $.ajax({
+            					type: "POST",
+            					url: endpoint, 
+            					data: form,
+            					contentType: false,
+            					processData: false,
+            					complete: function(){
+            						alert("ajax always");
+            						closeConnection();
+            					},
+            					success: function(){
+            						alert("ajax success");
+            					},
+            					error: function(){
+            						alert("ajax error");
+            					}
+            				});
+            			}*/
+            , // TODO: test this
             // asset Id is also the same as the dependency tag (only numbers)
             checkin: function checkin(site, assetId, deferred) {
                 console.log("--checkinAsset--");
@@ -666,15 +910,45 @@
                 });
                 return deferred.promise();
             },
-            //TODO: test this
-            list: function list(site) {
-                var count = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 100;
-                var start = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-                var sortKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'name';
-                var sortOrder = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'asc';
-                var deferred = arguments[5];
+            // TODO: test this
+            // asset Id is also the same as the dependency tag (only numbers)
+            info: function info(site, assetId, deferred) {
+                console.log("--assetInfo--");
 
+                var endpoint = gadget.get('apihost') + '/assets/info';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    asset: assetId
+                };
+
+                ajaxC({
+                    type: "GET",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+
+            /*
+            Assets Info:
+            
+            GET
+            assets/info
+            
+            Params:
+            site:_test
+            asset:145350
+            */
+            , //TODO: test this
+            list: function list(site, count, start, sortKey, sortOrder, deferred) {
                 console.log("--listAssets--");
+                if (typeof count == 'undefined') count = 100;
+                if (typeof start == 'undefined') start = 1;
+                if (typeof sortKey == 'undefined') sortKey = 'name';
+                if (typeof sortOrder == 'undefined') sortOrder = 'asc';
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/assets/list';
@@ -708,86 +982,6 @@
             type:
             */
             , new: function _new() {}
-            /*
-            Web Content:
-            
-            POST
-            assets/new
-            
-            Params:
-            name:New Asset Name
-            description:New Asset Description
-            site_locked:true
-            group:Webgroup
-            readers:Webgroup
-                content:Great new content
-            site:_test
-            type:0
-            tags:Newtag
-            tags:newtag2*/
-
-            /*
-            Plain Text:
-            
-            POST
-            assets/new
-            
-            Params:
-            name:New Asset Name2
-            description:New Asset Description
-            site_locked:true
-            group:Webgroup
-            readers:Webgroup
-                content:great new content
-            site:_test
-            type:2
-            tags:Newtag
-            */
-
-            /*
-            Source Code:
-            
-            POST
-            assets/new
-            
-            name:New Asset Name 3
-            description:New Asset Description
-            site_locked:true
-            group:Webgroup
-            readers:Webgroup
-                syntax:ou_htmlmixed_dm
-                theme:default
-                line-number:
-                query:
-                replaceText:
-                isRegex:false
-                matchCase:false
-                content:asset content
-            site:_test
-            type:1
-            tags:Newtag
-            tags:newtag2
-            */
-
-            /*
-            Image Gallery:
-            
-            POST
-            assets/new
-            
-            name:New Asset Name 4
-            description:New Asset Desc
-            group:Everyone
-            readers:Everyone
-                thumbnail_width:100
-                thumbnail_height:100
-                force_crop:false
-                advanced:advanced content
-            site_locked:true
-            site:_test
-            type:3
-            tags:n
-            */
 
             /*
             Image Gallery Add Image:
@@ -836,6 +1030,63 @@
             */
 
             /*
+            Assets Save (same endpoint as image gallery save - same for all 3 text-based assets):
+            
+            POST
+            assets/save
+            
+            Params:
+            site:_test
+            asset:145346
+            content:Great new content
+            */
+            , // TODO: test this
+            // tags can be an array
+            /*
+                @param object extra - can contain these keys:
+                pass_message: string
+                fail_message: string
+                use_database: bool
+                captcha: bool
+            */
+            newForm: function newForm(name, site, description, group, readGroup, formContents, tags, lockToSite, extra, deferred) {
+                console.log("--newFormAsset--");
+                if (typeof lockToSite == 'undefined') lockToSite = true;
+
+                if (typeof extra == 'undefined') extra = {
+                    pass_message: "Thank you for your submission",
+                    fail_message: "There was an error. Please try again.",
+                    use_database: true,
+                    captcha: false
+                };
+
+                var endpoint = gadget.get('apihost') + '/assets/new';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    name: name,
+                    site: site,
+                    description: description,
+                    group: group,
+                    readers: readGroup,
+                    elements: formContents,
+                    tags: tags,
+                    site_locked: lockToSite,
+                    type: 4
+                };
+
+                $.extend(params, extra);
+
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: $.param(params, true),
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+
+            /*
             Forms:
             
             POST
@@ -858,40 +1109,229 @@
             tags:n
             tags:s
             */
-
+            , // TODO: test this
+            // tags can be an array
             /*
-            Assets Info:
-            
-            GET
-            assets/info
-            
-            Params:
-            site:_test
-            asset:145350
+                @param object extra - can contain these keys:
+                thumbnail_width: int
+                thumbnail_height: int
+                force_crop: bool
+                advanced: string
             */
+            newImageGallery: function newImageGallery(name, site, description, group, readGroup, tags, lockToSite, extra, deferred) {
+                console.log("--newImageGalleryAsset--");
+                if (typeof lockToSite == 'undefined') lockToSite = true;
+
+                if (typeof extra == 'undefined') extra = {
+                    thumbnail_width: 100,
+                    thumbnail_height: 100,
+                    force_crop: false
+                };
+
+                var endpoint = gadget.get('apihost') + '/assets/new';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    name: name,
+                    site: site,
+                    description: description,
+                    group: group,
+                    readers: readGroup,
+                    tags: tags,
+                    site_locked: lockToSite,
+                    type: 3
+                };
+
+                $.extend(params, extra);
+
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: $.param(params, true),
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
 
             /*
-            View Assets:
-            
-            GET
-            assets/view
-            
-            Params:
-            site:_test
-            asset:145350
-            */
-
-            /*
-            Assets Save (same endpoint as image gallery save - same for all 3 text-based assets):
+            Image Gallery:
             
             POST
-            assets/save
+            assets/new
+            
+            name:New Asset Name 4
+            description:New Asset Desc
+            group:Everyone
+            readers:Everyone
+                thumbnail_width:100
+                thumbnail_height:100
+                force_crop:false
+                advanced:advanced content
+            site_locked:true
+            site:_test
+            type:3
+            tags:n
+            */
+            , // TODO: test this
+            // tags can be an array
+            newPlainText: function newPlainText(name, site, description, group, readGroup, content, tags, lockToSite, deferred) {
+                console.log("--newPlainTextAsset--");
+                if (typeof lockToSite == 'undefined') lockToSite = true;
+
+                var endpoint = gadget.get('apihost') + '/assets/new';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    name: name,
+                    site: site,
+                    description: description,
+                    group: group,
+                    readers: readGroup,
+                    content: content,
+                    tags: tags,
+                    site_locked: lockToSite,
+                    type: 2
+                };
+
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: $.param(params, true),
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+
+            /*
+            Plain Text:
+            
+            POST
+            assets/new
             
             Params:
+            name:New Asset Name2
+            description:New Asset Description
+            site_locked:true
+            group:Webgroup
+            readers:Webgroup
+                content:great new content
             site:_test
-            asset:145346
-            content:Great new content
+            type:2
+            tags:Newtag
             */
+            , // TODO: test this
+            // tags can be an array
+            /*
+                @param object extra - can contain these keys:
+                syntax: string
+                theme: default
+                line-number:
+                query:
+                replaceText:
+                isRegex: bool
+                matchCase: bool
+            */
+            newSourceCode: function newSourceCode(name, site, description, group, readGroup, content, tags, lockToSite) {
+                var extra = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
+                var deferred = arguments[9];
+
+                console.log("--newSourceCodeAsset--");
+                if (typeof lockToSite == 'undefined') lockToSite = true;
+
+                var endpoint = gadget.get('apihost') + '/assets/new';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    name: name,
+                    site: site,
+                    description: description,
+                    group: group,
+                    readers: readGroup,
+                    content: content,
+                    tags: tags,
+                    site_locked: lockToSite,
+                    type: 1
+                };
+
+                $.extend(params, extra);
+
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: $.param(params, true),
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+
+            /*
+            Source Code:
+            
+            POST
+            assets/new
+            
+            
+                syntax:ou_htmlmixed_dm
+                theme:default
+                line-number:
+                query:
+                replaceText:
+                isRegex:false
+                matchCase:false
+            content:asset content
+            site:_test
+            type:1
+            tags:Newtag
+            tags:newtag2
+            */
+            , // TODO: test this
+            // tags can be an array
+            newWebContent: function newWebContent(name, site, description, group, readGroup, content, tags, lockToSite, deferred) {
+                console.log("--newWebContentAsset--");
+                if (typeof lockToSite == 'undefined') lockToSite = true;
+
+                var endpoint = gadget.get('apihost') + '/assets/new';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    name: name,
+                    site: site,
+                    description: description,
+                    group: group,
+                    readers: readGroup,
+                    content: content,
+                    tags: tags,
+                    site_locked: lockToSite,
+                    type: 0
+                };
+
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: $.param(params, true),
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+
+            /*
+            Web Content:
+            
+            POST
+            assets/new
+            
+            Params:
+            name:New Asset Name
+            site:_test
+            group:Webgroup
+            readers:Webgroup
+            description:New Asset Description
+            site_locked:true
+            content:Great new content
+            
+            type:0
+            tags:Newtag
+            tags:newtag2*/
             , //TODO: test this
             publish: function publish(name, site, versionDesc, deferred) {
                 console.log("--publishAsset--");
@@ -912,7 +1352,39 @@
                     deferred: deferred
                 });
                 return deferred.promise();
+            },
+            // TODO: test this
+            // asset Id is also the same as the dependency tag (only numbers)
+            view: function view(site, assetId, deferred) {
+                console.log("--viewAsset--");
+
+                var endpoint = gadget.get('apihost') + '/assets/view';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    asset: assetId
+                };
+
+                ajaxC({
+                    type: "GET",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
             }
+
+            /*
+            View Assets:
+            
+            GET
+            assets/view
+            
+            Params:
+            site:_test
+            asset:145350
+            */
         },
 
         reports: {
@@ -1021,10 +1493,20 @@
                         debugger;
                         //console.log("closure - method: ", method);
                         //console.log("closure - group: ", group);							
-
+                        console.log("original method # params: ", originalMethod.length);
                         // convert arguments to array
                         var args = Array.prototype.slice.call(arguments);
 
+                        // make sure all expected parameters are received (even if undefined). Excludes deferred.
+                        if (args.length < originalMethod.length - 1) {
+                            // make up difference in parameters
+                            var diff = originalMethod.length - 1 - args.length;
+                            for (var i = 0; i < diff; i++) {
+                                args.push(undefined);
+                            }
+                        }
+
+                        console.log("args (arguments): ", args);
                         // use deferred if present. Else, make one
                         var deferred = args[args.length - 1];
                         if (!isDeferred(deferred)) {
