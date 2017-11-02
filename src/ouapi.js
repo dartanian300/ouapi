@@ -23,6 +23,8 @@
         requestsFailed: 0,			// # requests that were rejected --
         requestsPending: 0,			// # requests currently processing
     }
+    
+    var isReady = false;
 
 // 		debug(dequeue);
 // 		debug(checkQueue);
@@ -77,7 +79,7 @@
         debugger;
         // don't try to call more methods than are queued
         num = num <= queue.length ? num : queue.length;
-        for (i = 0; i < num; i++){
+        for (var i = 0; i < num; i++){
             var method = queue.shift();
             method.func.apply(ouapi, method.args);
         }
@@ -186,6 +188,9 @@
         @return bool
     */
     function isPromise(x){
+        if (typeof x == 'undefined')
+            return false;
+        
         if (x.promise && !isDeferred(x))
             return true;
         return false;
@@ -196,6 +201,9 @@
         @return bool
     */
     function isDeferred(x){
+        if (typeof x == 'undefined')
+            return false;
+        
         if (x.promise && x.notify)
             return true;
         return false;
@@ -329,10 +337,20 @@
                         debugger;
                         //console.log("closure - method: ", method);
                         //console.log("closure - group: ", group);							
-
+                        console.log("original method # params: ", originalMethod.length);
                         // convert arguments to array
                         var args = Array.prototype.slice.call(arguments);
 
+                        // make sure all expected parameters are received (even if undefined). Excludes deferred.
+                        if (args.length < originalMethod.length - 1){
+                            // make up difference in parameters
+                            var diff = originalMethod.length - 1 - args.length;
+                            for (var i = 0; i < diff; i++){
+                                args.push(undefined);
+                            }
+                        }
+                        
+                        console.log("args (arguments): ", args);
                         // use deferred if present. Else, make one
                         var deferred = args[args.length - 1];
                         if (!isDeferred(deferred)){
