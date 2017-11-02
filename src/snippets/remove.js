@@ -1,4 +1,3 @@
-//TODO: test this
 remove: function(name, site, category, deferred) {
     console.log("--removeSnippet--");
 

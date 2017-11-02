@@ -1,4 +1,3 @@
-//TODO: test this
 list: function(site, deferred) {
     console.log("--listSnippets/Categories--");
 

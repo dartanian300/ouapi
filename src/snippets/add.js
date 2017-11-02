@@ -1,4 +1,3 @@
-//TODO: test this
 add: function(name, path, site, description, category, deferred) {
     console.log("--addSnippet--");
 

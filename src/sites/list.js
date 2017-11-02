@@ -1,7 +1,10 @@
 //TODO: test this
-list: function(count = 5000, site, account, deferred) {
+list: function(site, account, count, deferred) {
+    if (typeof count == 'undefined') count = 5000;
     console.log("--sitesList--");
 
+    console.log("arguments: ", arguments);
+    
     if (typeof site == 'undefined')
         site = gadget.get('site');
     if (typeof account == 'undefined')
