@@ -2,3 +2,8 @@ Parameter rules:
 -Order of precenese:
     name -> path -> site
 -All functions must take a deferred object as the last argument
+-All functions must not use traditional default parameters (function x(number = 5) ). Since these do not populate the function.length property, they break the library's framework.
+    Instead, use traditional JavaScript default parameters:
+    function x (number){
+        if (typeof number == 'undefined') number = 5;
+    }
