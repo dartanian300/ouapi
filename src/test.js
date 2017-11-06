@@ -34,23 +34,48 @@ function doTest(){
 //    ouapi.files.checkout(path, site).then( function(data){ console.log("check out file done: ", data); } );
 //    ouapi.files.checkin(path, site).then( function(data){ console.log("files checkin done: ", data); } );
     
-    ouapi.files.create("index2.pcf", "/", site).then( function(data){ console.log("files create done: ", data); } );
-    ouapi.files.new_folder("new_folder", "/", site).then( function(data){ console.log("files new folder done: ", data); } );
-//    ouapi.files.publish(path, site, versionDesc).then( function(data){ console.log("files publish done: ", data); } );
+//    ouapi.files.create("index2.pcf", "/", site).then( function(data){ console.log("files create done: ", data); } );
+//    ouapi.files.new_folder("new_folder", "/", site).then( function(data){ console.log("files new folder done: ", data); } );
+//    ouapi.files.publish(path, site, "New test version").then( function(data){ console.log("files publish done: ", data); } );
 //    ouapi.files.recycle(path, site).then( function(data){ console.log("files recycle done: ", data); } );
-//    ouapi.files.save(path, site, content).then( function(data){ console.log("files save done: ", data); } );
-//    ouapi.files.delete(path, site, remote).then( function(data){ console.log("files delete done: ", data); } );
+//    ouapi.files.save(path, site, "this is some new content").then( function(data){ console.log("files save done: ", data); } );
+//    ouapi.files.delete(path, site).then( function(data){ console.log("files delete done: ", data); } );
 //    
-//    ouapi.files.publishMulti(paths,
+//    ouapi.files.publishMulti(['/index.pcf', '/index-34525.pcf'],
 //                        site,
-//                        versionDesc,
-//                        includeCheckedout,
-//                        includeScheduled,
-//                        includePendingApproval,
-//                        changedOnly,
-//                        useLastPublishedVersion,
-//                        includeUnpublishedDependencies,
-//                        deferred).then( function(data){ console.log("publish multi done: ", data); } );
+//                        "Multipublish version description",
+//                        true,
+//                        true,
+//                        true,
+//                       ).then( function(data){ console.log("publish multi done: ", data); } );
+    
+    
+    // assets
+    
+    //var assetId = '146290';
+    var assetId = '146296';
+//    ouapi.assets.newPlainText("Plain Text asset", site, "Cool description", "Some awesome content").then( function(data){ console.log("assets newPlainText done: ", data); } );
+//    ouapi.assets.newImageGallery("Image Gallery Asset", site, "cool description").then( function(data){ console.log("assets newImageGallery done: ", data); } );
+//    ouapi.assets.newSourceCode("Source Code Asset", site, 'description', '<html></html>').then( function(data){ console.log("assets newSourceCode done: ", data); } );
+//    ouapi.assets.newWebContent("Web content asset", site, 'description', 'web content').then( function(data){ console.log("assets newWebContent done: ", data); } );
+//    ouapi.assets.newForm('Form asset 3', site, 'description', '', '', 'Webgroup', 'Webgroup', ['tag1', 'tag2', 'tag3'], false, {
+//        pass_message: "SUCCESS!",
+//        fail_message: "please try again",
+//        use_database: true,
+//        captcha: false,
+//        
+//    }).then( function(data){ console.log("assets newForm done: ", data); } );
+    
+//    ouapi.assets.checkin(site, assetId).then( function(data){ console.log("assets checkin done: ", data); } );
+//    ouapi.assets.checkout(site, assetId).then( function(data){ console.log("assets checkout done: ", data); } );
+//    ouapi.assets.view(site, assetId).then( function(data){ console.log("assets view done: ", data); } );
+//    ouapi.assets.list(site).then( function(data){ console.log("assets list done: ", data); } );
+
+//    ouapi.assets.dependents(assetId, site).then( function(data){ console.log("assets dependents done: ", data); } );
+//    ouapi.assets.info(site, assetId).then( function(data){ console.log("assets info done: ", data); } );
+        
+//    ouapi.assets.publish(site, 'a'+assetId+'.html', 'new version').then( function(data){ console.log("assets publish done: ", data); } );
+    ouapi.assets.delete(site, assetId).then( function(data){ console.log("assets delete done: ", data); } );
 };
 
 
