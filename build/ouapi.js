@@ -413,7 +413,6 @@
                 });
                 return deferred.promise();
             },
-            // TODO: test this
             delete: function _delete(path, site, remote, deferred) {
                 console.log("--deleteFile/Folder--");
                 if (typeof remote == 'undefined') remote = false;
@@ -435,7 +434,6 @@
                 });
                 return deferred.promise();
             },
-            //TODO: Not sure if this works - returns empty arrays - test this
             dependents: function dependents(path, site, deferred) {
                 console.log("--fileDependents--");
 
@@ -512,7 +510,6 @@
                 });
                 return deferred.promise();
             },
-            // TODO: test this
             new_folder: function new_folder(name, path, site, deferred) {
                 console.log("--new_folder--");
 
@@ -533,7 +530,6 @@
                 });
                 return deferred.promise();
             },
-            //TODO: test this
             publish: function publish(path, site, versionDesc, deferred) {
                 console.log("--publishFile--");
 
@@ -553,18 +549,8 @@
                     deferred: deferred
                 });
                 return deferred.promise();
-            }
-
-            /*
-            Params:
-            site:_test
-            path:/index.pcf
-            log:test version
-            target:_test
-            tweet:
-            wall_post:
-            */
-            , //TODO: test this
+            },
+            // paths can be an array
             publishMulti: function publishMulti(paths, site, versionDesc, includeCheckedout, includeScheduled, includePendingApproval, changedOnly, useLastPublishedVersion, includeUnpublishedDependencies, deferred) {
                 console.log("--publishMultiFile--");
                 if (typeof includeCheckedout == 'undefined') includeCheckedout = false;
@@ -621,8 +607,7 @@
             
             de:http://a.cms.omniupdate.com/10?skin=kennesaw&account=kennesaw&site=_test&action=de&path=
             */
-            , // TODO: test this
-            // path can be string or array of strings
+            , // path can be string or array of strings
             recycle: function recycle(path, site, deferred) {
                 console.log("--recycleFiles--");
 
@@ -642,7 +627,6 @@
                 });
                 return deferred.promise();
             },
-            //TODO: test this
             save: function save(path, site, content, deferred) {
                 console.log("--saveFile--");
 
@@ -710,7 +694,6 @@
         },
 
         sites: {
-            //TODO: test this
             list: function list(site, account, count, deferred) {
                 if (typeof count == 'undefined') count = 5000;
                 console.log("--sitesList--");
@@ -826,8 +809,7 @@
             					}
             				});
             			}*/
-            , // TODO: test this
-            // asset Id is also the same as the dependency tag (only numbers)
+            , // asset Id is also the same as the dependency tag (only numbers)
             checkin: function checkin(site, assetId, deferred) {
                 console.log("--checkinAsset--");
 
@@ -847,7 +829,6 @@
                 });
                 return deferred.promise();
             },
-            // TODO: test this
             // asset Id is also the same as the dependency tag (only numbers)
             checkout: function checkout(site, assetId, deferred) {
                 console.log("--checkoutAsset--");
@@ -868,7 +849,6 @@
                 });
                 return deferred.promise();
             },
-            // TODO: test this
             // asset Id is also the same as the dependency tag (only numbers) - can be array
             delete: function _delete(site, assetId, deferred) {
                 console.log("--deleteAsset--");
@@ -889,7 +869,6 @@
                 });
                 return deferred.promise();
             },
-            //TODO: test this
             // asset Id is also the same as the dependency tag (only numbers)
             dependents: function dependents(assetId, site, deferred) {
                 console.log("--assetDependents--");
@@ -910,7 +889,6 @@
                 });
                 return deferred.promise();
             },
-            // TODO: test this
             // asset Id is also the same as the dependency tag (only numbers)
             info: function info(site, assetId, deferred) {
                 console.log("--assetInfo--");
@@ -942,8 +920,7 @@
             site:_test
             asset:145350
             */
-            , //TODO: test this
-            list: function list(site, count, start, sortKey, sortOrder, deferred) {
+            , list: function list(site, count, start, sortKey, sortOrder, deferred) {
                 console.log("--listAssets--");
                 if (typeof count == 'undefined') count = 100;
                 if (typeof start == 'undefined') start = 1;
@@ -960,7 +937,7 @@
                     count: count,
                     start: start,
                     sort_key: sortKey,
-                    sort_order: sort_order, sortOrder: sortOrder,
+                    sort_order: sortOrder,
                     ignore_readers: true // ignore read-access rules
                 };
                 ajaxC({
@@ -1040,8 +1017,7 @@
             asset:145346
             content:Great new content
             */
-            , // TODO: test this
-            // tags can be an array
+            , // tags can be an array
             /*
                 @param object extra - can contain these keys:
                 pass_message: string
@@ -1049,8 +1025,18 @@
                 use_database: bool
                 captcha: bool
             */
-            newForm: function newForm(name, site, description, group, readGroup, formContents, tags, lockToSite, extra, deferred) {
+            /*
+                formContents & emails are JSON
+                
+                emails format:
+                [{"to":"toemail@email.com","from":"from3mail@email.com","subject":"Subject line","body":"A cool\nbody \nemail\n\nyeah"}]
+            */
+            newForm: function newForm(name, site, description, formContents, emails, group, readGroup, tags, lockToSite, extra, deferred) {
                 console.log("--newFormAsset--");
+                if (typeof formContents == 'undefined' || formContents == '') formContents = '[]';
+                if (typeof emails == 'undefined' || emails == '') emails = '[]';
+                if (typeof group == 'undefined') group = 'Everyone';
+                if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
 
                 if (typeof extra == 'undefined') extra = {
@@ -1070,6 +1056,7 @@
                     group: group,
                     readers: readGroup,
                     elements: formContents,
+                    emails: emails,
                     tags: tags,
                     site_locked: lockToSite,
                     type: 4
@@ -1109,8 +1096,7 @@
             tags:n
             tags:s
             */
-            , // TODO: test this
-            // tags can be an array
+            , // tags can be an array
             /*
                 @param object extra - can contain these keys:
                 thumbnail_width: int
@@ -1120,6 +1106,8 @@
             */
             newImageGallery: function newImageGallery(name, site, description, group, readGroup, tags, lockToSite, extra, deferred) {
                 console.log("--newImageGalleryAsset--");
+                if (typeof group == 'undefined') group = 'Everyone';
+                if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
 
                 if (typeof extra == 'undefined') extra = {
@@ -1172,10 +1160,11 @@
             type:3
             tags:n
             */
-            , // TODO: test this
-            // tags can be an array
-            newPlainText: function newPlainText(name, site, description, group, readGroup, content, tags, lockToSite, deferred) {
+            , // tags can be an array
+            newPlainText: function newPlainText(name, site, description, content, group, readGroup, tags, lockToSite, deferred) {
                 console.log("--newPlainTextAsset--");
+                if (typeof group == 'undefined') group = 'Everyone';
+                if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
 
                 var endpoint = gadget.get('apihost') + '/assets/new';
@@ -1219,8 +1208,7 @@
             type:2
             tags:Newtag
             */
-            , // TODO: test this
-            // tags can be an array
+            , // tags can be an array
             /*
                 @param object extra - can contain these keys:
                 syntax: string
@@ -1231,12 +1219,13 @@
                 isRegex: bool
                 matchCase: bool
             */
-            newSourceCode: function newSourceCode(name, site, description, group, readGroup, content, tags, lockToSite) {
-                var extra = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
-                var deferred = arguments[9];
-
+            newSourceCode: function newSourceCode(name, site, description, content, group, readGroup, tags, lockToSite, extra, deferred) {
                 console.log("--newSourceCodeAsset--");
+                if (typeof group == 'undefined') group = 'Everyone';
+                if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
+
+                if (typeof extra == 'undefined') extra = {};
 
                 var endpoint = gadget.get('apihost') + '/assets/new';
                 var params = {
@@ -1284,10 +1273,11 @@
             tags:Newtag
             tags:newtag2
             */
-            , // TODO: test this
-            // tags can be an array
-            newWebContent: function newWebContent(name, site, description, group, readGroup, content, tags, lockToSite, deferred) {
+            , // tags can be an array
+            newWebContent: function newWebContent(name, site, description, content, group, readGroup, tags, lockToSite, deferred) {
                 console.log("--newWebContentAsset--");
+                if (typeof group == 'undefined') group = 'Everyone';
+                if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
 
                 var endpoint = gadget.get('apihost') + '/assets/new';
@@ -1332,8 +1322,9 @@
             type:0
             tags:Newtag
             tags:newtag2*/
-            , //TODO: test this
-            publish: function publish(name, site, versionDesc, deferred) {
+            , // forms & galleries use .json - others use .html
+            //TODO: figure out best way to handle .json vs .html file extensions
+            publish: function publish(site, filename, versionDesc, deferred) {
                 console.log("--publishAsset--");
 
                 var protocol = "http:";
@@ -1342,7 +1333,7 @@
                     authorization_token: gadget.get('token'),
 
                     site: site,
-                    path: '/OMNI-ASSETS/' + name,
+                    path: '/OMNI-ASSETS/' + filename,
                     log: versionDesc
                 };
                 ajaxC({
@@ -1353,7 +1344,6 @@
                 });
                 return deferred.promise();
             },
-            // TODO: test this
             // asset Id is also the same as the dependency tag (only numbers)
             view: function view(site, assetId, deferred) {
                 console.log("--viewAsset--");
@@ -1384,6 +1374,11 @@
             Params:
             site:_test
             asset:145350
+            */
+
+            /*
+            Response: 
+            {"type_name":"generic","site":"_test","is_published":false,"name":"Web content asset","site_locked":true,"description":"description","asset":146296,"type":0,"content":"web content","enabled":true,"tags":[]}
             */
         },
 
