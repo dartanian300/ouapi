@@ -1,4 +1,3 @@
-// TODO: test this
 new_folder: function(name, path, site, deferred) {
     console.log("--new_folder--");
 
