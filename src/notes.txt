@@ -7,3 +7,7 @@ Parameter rules:
     function x (number){
         if (typeof number == 'undefined') number = 5;
     }
+    
+Note: some methods (such as publish) do not immediately send a success or failure message
+
+**determine best way for asset publish to work
