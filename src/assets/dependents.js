@@ -1,4 +1,3 @@
-//TODO: test this
 // asset Id is also the same as the dependency tag (only numbers)
 dependents: function(assetId, site, deferred) {
     console.log("--assetDependents--");

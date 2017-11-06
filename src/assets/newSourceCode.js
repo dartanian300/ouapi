@@ -1,4 +1,3 @@
-// TODO: test this
 // tags can be an array
 /*
     @param object extra - can contain these keys:
@@ -10,9 +9,14 @@
     isRegex: bool
     matchCase: bool
 */
-newSourceCode: function(name, site, description, group, readGroup, content, tags, lockToSite, extra = {}, deferred) {
+newSourceCode: function(name, site, description, content, group, readGroup, tags, lockToSite, extra, deferred) {
     console.log("--newSourceCodeAsset--");
+    if (typeof group == 'undefined') group = 'Everyone';
+    if (typeof readGroup == 'undefined') readGroup = 'Everyone';
     if (typeof lockToSite == 'undefined') lockToSite = true;
+    
+    if (typeof extra == 'undefined')
+        extra = {};
 
     var endpoint = gadget.get('apihost') + '/assets/new';
     var params = {

@@ -1,4 +1,4 @@
-//TODO: test this
+// paths can be an array
 publishMulti: function(paths,
                         site,
                         versionDesc,

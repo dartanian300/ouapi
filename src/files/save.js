@@ -1,4 +1,3 @@
-//TODO: test this
 save: function(path, site, content, deferred) {
     console.log("--saveFile--");
 

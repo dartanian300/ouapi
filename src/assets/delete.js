@@ -1,4 +1,3 @@
-// TODO: test this
 // asset Id is also the same as the dependency tag (only numbers) - can be array
 delete: function(site, assetId, deferred) {
     console.log("--deleteAsset--");

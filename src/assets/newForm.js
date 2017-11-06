@@ -1,4 +1,3 @@
-// TODO: test this
 // tags can be an array
 /*
     @param object extra - can contain these keys:
@@ -7,8 +6,18 @@
     use_database: bool
     captcha: bool
 */
-newForm: function(name, site, description, group, readGroup, formContents, tags, lockToSite, extra, deferred) {
+/*
+    formContents & emails are JSON
+    
+    emails format:
+    [{"to":"toemail@email.com","from":"from3mail@email.com","subject":"Subject line","body":"A cool\nbody \nemail\n\nyeah"}]
+*/
+newForm: function(name, site, description, formContents, emails, group, readGroup, tags, lockToSite, extra, deferred) {
     console.log("--newFormAsset--");
+    if (typeof formContents == 'undefined' || formContents == '') formContents = '[]';
+    if (typeof emails == 'undefined' || emails == '') emails = '[]';
+    if (typeof group == 'undefined') group = 'Everyone';
+    if (typeof readGroup == 'undefined') readGroup = 'Everyone';
     if (typeof lockToSite == 'undefined') lockToSite = true;
 
     if (typeof extra == 'undefined')
@@ -29,6 +38,7 @@ newForm: function(name, site, description, group, readGroup, formContents, tags,
         group: group,
         readers: readGroup,
         elements: formContents,
+        emails: emails,
         tags: tags,
         site_locked: lockToSite,
         type: 4

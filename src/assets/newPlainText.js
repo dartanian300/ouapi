@@ -1,7 +1,8 @@
-// TODO: test this
 // tags can be an array
-newPlainText: function(name, site, description, group, readGroup, content, tags, lockToSite, deferred) {
+newPlainText: function(name, site, description, content, group, readGroup, tags, lockToSite, deferred) {
     console.log("--newPlainTextAsset--");
+    if (typeof group == 'undefined') group = 'Everyone';
+    if (typeof readGroup == 'undefined') readGroup = 'Everyone';
     if (typeof lockToSite == 'undefined') lockToSite = true;
 
     var endpoint = gadget.get('apihost') + '/assets/new';

@@ -1,5 +1,6 @@
-//TODO: test this
-publish: function(name, site, versionDesc, deferred) {
+// forms & galleries use .json - others use .html
+//TODO: figure out best way to handle .json vs .html file extensions
+publish: function(site, filename, versionDesc, deferred) {
     console.log("--publishAsset--");
 
     var protocol = "http:";
@@ -8,7 +9,7 @@ publish: function(name, site, versionDesc, deferred) {
         authorization_token: gadget.get('token'), 
 
         site: site,
-        path: '/OMNI-ASSETS/'+name,
+        path: '/OMNI-ASSETS/'+filename,
         log: versionDesc
     };
     ajaxC({

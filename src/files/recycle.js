@@ -1,4 +1,3 @@
-// TODO: test this
 // path can be string or array of strings
 recycle: function(path, site, deferred) {
     console.log("--recycleFiles--");

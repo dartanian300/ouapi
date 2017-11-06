@@ -1,4 +1,3 @@
-//TODO: Not sure if this works - returns empty arrays - test this
 dependents: function(path, site, deferred) {
     console.log("--fileDependents--");
 

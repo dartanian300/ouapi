@@ -1,4 +1,3 @@
-//TODO: test this
 list: function(site, account, count, deferred) {
     if (typeof count == 'undefined') count = 5000;
     console.log("--sitesList--");

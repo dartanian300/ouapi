@@ -1,4 +1,3 @@
-//TODO: test this
 list: function(site, count, start, sortKey, sortOrder, deferred) {
     console.log("--listAssets--");
     if (typeof count == 'undefined') count = 100;
@@ -16,7 +15,7 @@ list: function(site, count, start, sortKey, sortOrder, deferred) {
         count: count,
         start: start,
         sort_key: sortKey,
-        sort_order, sortOrder,
+        sort_order: sortOrder,
         ignore_readers: true    // ignore read-access rules
     };
     ajaxC({

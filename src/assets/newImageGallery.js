@@ -1,4 +1,3 @@
-// TODO: test this
 // tags can be an array
 /*
     @param object extra - can contain these keys:
@@ -9,6 +8,8 @@
 */
 newImageGallery: function(name, site, description, group, readGroup, tags, lockToSite, extra, deferred) {
     console.log("--newImageGalleryAsset--");
+    if (typeof group == 'undefined') group = 'Everyone';
+    if (typeof readGroup == 'undefined') readGroup = 'Everyone';
     if (typeof lockToSite == 'undefined') lockToSite = true;
 
     if (typeof extra == 'undefined')

@@ -1,4 +1,3 @@
-// TODO: test this
 // asset Id is also the same as the dependency tag (only numbers)
 checkin: function(site, assetId, deferred) {
     console.log("--checkinAsset--");

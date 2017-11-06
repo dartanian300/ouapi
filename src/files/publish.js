@@ -1,4 +1,3 @@
-//TODO: test this
 publish: function(path, site, versionDesc, deferred) {
     console.log("--publishFile--");
 
@@ -19,15 +18,3 @@ publish: function(path, site, versionDesc, deferred) {
     });
     return deferred.promise();
 }
-
-
-
-/*
-Params:
-site:_test
-path:/index.pcf
-log:test version
-target:_test
-tweet:
-wall_post:
-*/
