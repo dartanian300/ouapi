@@ -65,7 +65,7 @@
             }
         } else {
             console.log("call next");
-            //closeConnection();
+            closeConnection();
             callNext();
         }
     }
