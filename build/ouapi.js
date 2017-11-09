@@ -65,7 +65,7 @@
             }
         } else {
             console.log("call next");
-            //closeConnection();
+            closeConnection();
             callNext();
         }
     }
@@ -694,7 +694,99 @@
         },
 
         sites: {
-            list: function list(site, account, count, deferred) {
+            // type string - 'string' or 'regex'
+            // negexts bool - if true, exclude extensions. If false, use only the extensions
+            // paths array - strings of paths to search
+            find: function find(site, _find, caseSensitive, includeLocked, paths, type, negexts, extensions, deferred) {
+                console.log("this: ", this);
+                console.log("--siteFind--");
+                if (typeof caseSensitive == 'undefined') caseSensitive = false;
+                if (typeof includeLocked == 'undefined') includeLocked = true;
+                //    if (typeof paths == 'undefined') paths = "";
+                if (typeof type == 'undefined') type = 'string';
+                if (typeof negexts == 'undefined') negexts = true;
+                if (typeof extensions == 'undefined') extensions = [];
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/sites/findreplace';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    site: site,
+                    srchstr: _find,
+                    casesensitive: caseSensitive,
+                    includelocked: includeLocked,
+                    paths: JSON.stringify(paths),
+                    srchtype: type,
+                    negexts: negexts,
+                    extensions: extensions
+                };
+                //    ajaxC({
+                //        type: "POST",
+                //        url: endpoint, 
+                //        data: $.param(params, true),
+                //        deferred: deferred
+                //    });
+                //    return deferred.promise();
+
+                var intDeferred = new $.Deferred(); // internal deferred
+                // search entire site
+                if (typeof paths == 'undefined') {
+                    ouapi.files.list('/', site).then(function (fileList) {
+                        //            console.log("test");
+                        var paths = $.map(fileList.entries, function (n) {
+                            return n.staging_path;
+                        });
+                        //            console.log("paths: ", paths);
+
+                        params.paths = JSON.stringify(paths);
+                        ajaxC({
+                            type: "POST",
+                            url: endpoint,
+                            data: $.param(params, true),
+                            deferred: intDeferred
+                        }).then(function (resp) {
+                            return ouapi.util.findReplaceStatus(site, resp.id);
+                        }).then(function (searchData) {
+                            // return data with promise.resolve
+                            deferred.resolve(searchData);
+                        }).fail(function (resp) {
+                            deferred.reject(resp);
+                        });
+                    });
+                } else {
+                    // just search the given paths
+                    ajaxC({
+                        type: "POST",
+                        url: endpoint,
+                        data: $.param(params, true),
+                        deferred: intDeferred
+                    }).then(function (resp) {
+                        return ouapi.util.findReplaceStatus(site, resp.id);
+                    }).then(function (searchData) {
+                        // return data with promise.resolve
+                        deferred.resolve(searchData);
+                    }).fail(function (resp) {
+                        deferred.reject(resp);
+                    });
+                }
+
+                return deferred.promise();
+            }
+
+            //srchtype:string
+            //srchstr:sport
+            //casesensitive:false
+            //rplcstr:
+            //negexts:true
+            //paths:
+            //includelocked
+            //
+            //
+            //negexts
+            //extensions
+
+            , list: function list(site, account, count, deferred) {
                 if (typeof count == 'undefined') count = 5000;
                 console.log("--sitesList--");
 
@@ -717,6 +809,29 @@
                     url: endpoint,
                     data: params,
                     deferred: deferred
+                });
+                return deferred.promise();
+            },
+            test: function test(site, deferred) {
+                console.log("--test--");
+
+                ouapi.sites.list(site).done(function (sites) {
+                    console.log("sites: ", sites);
+
+                    // list snippets
+                    var protocol = "http:";
+                    var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/list';
+                    var params = {
+                        authorization_token: gadget.get('token'),
+
+                        site: site
+                    };
+                    ajaxC({
+                        type: "GET",
+                        url: endpoint,
+                        data: params,
+                        deferred: deferred
+                    });
                 });
                 return deferred.promise();
             }
@@ -1390,6 +1505,44 @@
             }
         },
 
+        util: {
+            findReplaceStatus: function findReplaceStatus(site, searchId) {
+                console.log("--findReplaceStatus--");
+                var deferred = new $.Deferred();
+
+                var endpoint = gadget.get('apihost') + '/sites/findreplacestatus';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    id: searchId,
+                    site: site
+                };
+                var pingInterval = 2000;
+
+                var interval = setInterval(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: endpoint,
+                        data: params
+                    }).then(function (statusResponse) {
+                        if (statusResponse.error == true) {
+                            clearInterval(interval);
+                            deferred.reject(statusResponse);
+                        }
+                        if (statusResponse.finished == true) {
+                            clearInterval(interval);
+                            deferred.resolve(statusResponse);
+                        }
+                    }, function (resp) {
+                        clearInterval(interval);
+                        deferred.reject(resp);
+                    });
+                }, pingInterval);
+
+                return deferred.promise();
+            }
+        },
+
         callbacks: {
             // runs when a request completes (success or fail)
             onComplete: function onComplete(callback) {
@@ -1456,7 +1609,7 @@
 
     console.log("api: ", ouapi);
 
-    var globalCodeMethodExceptions = ['ready', 'reports', 'callbacks']; // root-level keys in which to skip adding global code
+    var globalCodeMethodExceptions = ['ready', 'reports', 'callbacks', 'util']; // root-level keys in which to skip adding global code
     var bindMethodExceptions = ['callbacks']; // root-level keys in which to skip binding to ouapi in its literal position
 
     // bind all methods to the ouapi object
