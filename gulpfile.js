@@ -31,7 +31,8 @@ var data = {
     "/* insert:callbacks */": 'callbacks',
     "/* insert:sites */": 'sites',
     "/* insert:assets */": 'assets',
-    "/* insert:directories */": 'directories'
+    "/* insert:directories */": 'directories',
+    "/* insert:util */": 'util',
 };
 
 gulp.task('concat:js', function () {

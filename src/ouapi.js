@@ -65,7 +65,7 @@
             }
         } else {
             console.log("call next");
-            closeConnection();
+//            closeConnection();
             callNext();
         }
     }
@@ -261,6 +261,10 @@
         reports: {
             /* insert:reports */
         },
+        
+        util: {
+            /* insert:util */
+        },
 
         callbacks: {
             /* insert:callbacks */
@@ -305,7 +309,7 @@
 
     console.log("api: ", ouapi);
 
-    var globalCodeMethodExceptions = ['ready', 'reports', 'callbacks'];	// root-level keys in which to skip adding global code
+    var globalCodeMethodExceptions = ['ready', 'reports', 'callbacks', 'util'];	// root-level keys in which to skip adding global code
     var bindMethodExceptions = ['callbacks'];							// root-level keys in which to skip binding to ouapi in its literal position
 
     // bind all methods to the ouapi object
