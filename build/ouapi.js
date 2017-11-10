@@ -65,7 +65,7 @@
             }
         } else {
             console.log("call next");
-            closeConnection();
+            //            closeConnection();
             callNext();
         }
     }
@@ -99,6 +99,7 @@
             params: params.data
         };
         params.success = function (data, jqXHR, textStatus) {
+            closeConnection();
             stats.requestsPending--;
             dequeue();
             data.methodData = methodData;
@@ -117,6 +118,7 @@
             }
         };
         params.error = function (data, jqXHR, textStatus) {
+            closeConnection();
             stats.requestsPending--;
             stats.requestsFailed++;
 
@@ -127,7 +129,6 @@
             $(ouapi).trigger('ouapi.error', data);
         };
         params.complete = function (data, jqXHR, textStatus) {
-            closeConnection();
             data.methodData = methodData;
             if (origComplete) origComplete(data, jqXHR, textStatus);
             $(ouapi).trigger('ouapi.complete', data);
@@ -698,7 +699,7 @@
             // negexts bool - if true, exclude extensions. If false, use only the extensions
             // paths array - strings of paths to search
             find: function find(site, _find, caseSensitive, includeLocked, paths, type, negexts, extensions, deferred) {
-                console.log("this: ", this);
+                //    console.log("this: ", this);
                 console.log("--siteFind--");
                 if (typeof caseSensitive == 'undefined') caseSensitive = false;
                 if (typeof includeLocked == 'undefined') includeLocked = true;
@@ -732,6 +733,8 @@
                 var intDeferred = new $.Deferred(); // internal deferred
                 // search entire site
                 if (typeof paths == 'undefined') {
+                    //ignore this connection
+                    closeConnection();
                     ouapi.files.list('/', site).then(function (fileList) {
                         //            console.log("test");
                         var paths = $.map(fileList.entries, function (n) {
@@ -1540,6 +1543,13 @@
                 }, pingInterval);
 
                 return deferred.promise();
+            },
+            printPromiseStates: function printPromiseStates() {
+                var states = "";
+                $.each(promises, function (i, prom) {
+                    states += prom.state() + ", ";
+                });
+                console.log("ouapi promise states: " + states);
             }
         },
 
