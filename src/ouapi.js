@@ -99,6 +99,7 @@
             params: params.data
         }
         params.success = function(data, jqXHR, textStatus){
+            closeConnection();
             stats.requestsPending--;
             dequeue();
             data.methodData = methodData;
@@ -117,6 +118,7 @@
             }
         };
         params.error = function(data, jqXHR, textStatus){
+            closeConnection();
             stats.requestsPending--;
             stats.requestsFailed++;
 
@@ -127,7 +129,6 @@
             $(ouapi).trigger('ouapi.error', data);
         };
         params.complete = function(data, jqXHR, textStatus){
-            closeConnection();
             data.methodData = methodData;
             if (origComplete) origComplete(data, jqXHR, textStatus);
             $(ouapi).trigger('ouapi.complete', data);
