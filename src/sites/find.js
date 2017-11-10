@@ -36,6 +36,8 @@ find: function(site, find, caseSensitive, includeLocked, paths, type, negexts, e
     var intDeferred = new $.Deferred(); // internal deferred
     // search entire site
     if (typeof paths == 'undefined'){
+        //ignore this connection
+        closeConnection();
         ouapi.files.list('/', site).then(function(fileList){
 //            console.log("test");
             var paths = $.map( fileList.entries, function(n){ return n.staging_path; });
