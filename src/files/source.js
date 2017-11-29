@@ -1,4 +1,4 @@
-source: function(site, path, brokenTags, deferred) {
+source: function(path, site, brokenTags, deferred) {
     console.log("--removeSnippet--");
     if (typeof brokenTags == 'undefined') brokenTags = true;
 

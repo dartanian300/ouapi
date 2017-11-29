@@ -1,3 +1,4 @@
+// path can be array
 delete: function(path, site, remote, deferred) {
     console.log("--deleteFile/Folder--");
     if (typeof remote == 'undefined') remote = false;
