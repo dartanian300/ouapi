@@ -36,22 +36,22 @@
         Calls next queued request (after delay & sometimes delayAfter)
     */
     function dequeue() {
-        console.log("--dequeue--");
-        debugger;
+        void 0;
+        
         //             closeConnection();
-        console.log("queue length " + currentDelayAfter + ": ", queue.length);
-        console.log("promise queue length: ", promises.length);
-        console.log("numConnections: ", numConnections);
+        void 0;
+        void 0;
+        void 0;
 
         if (currentDelayAfter >= delayAfter) {
-            console.log("ready to wait");
+            void 0;
             if (whenApplied == false) {
-                console.log("when is not applied yet");
+                void 0;
                 whenApplied = true;
                 $.when.apply($, promises).always(function () {
-                    console.log("when fires");
+                    void 0;
                     setTimeout(function () {
-                        console.log("timeout fires");
+                        void 0;
 
                         //closeConnection();
                         resetClump();
@@ -64,7 +64,7 @@
                 });
             }
         } else {
-            console.log("call next");
+            void 0;
             //            closeConnection();
             callNext();
         }
@@ -76,7 +76,7 @@
     function callNext() {
         var num = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
-        debugger;
+        
         // don't try to call more methods than are queued
         num = num <= queue.length ? num : queue.length;
         for (var i = 0; i < num; i++) {
@@ -90,7 +90,7 @@
         @return deferred object
     */
     function ajaxC(params) {
-        debugger;
+        
         var origComplete = params.complete || null;
         var origSuccess = params.success || null;
         var origError = params.error || null;
@@ -143,7 +143,7 @@
         @return bool
     */
     function checkConnections() {
-        debugger;
+        
         if (numConnections < maxNumConnections) {
             return true;
         } else {
@@ -155,7 +155,7 @@
         Does necessary housekeeping to symbolically open a connection
     */
     function openConnection() {
-        debugger;
+        
         numConnections++;
         currentDelayAfter++;
     }
@@ -164,8 +164,8 @@
         Does necessary housekeeping to symbolically close a connection
     */
     function closeConnection() {
-        debugger;
-        console.log("--close connection - requestsFinished: ", stats.requestsFinished);
+        
+        void 0;
         numConnections--;
         stats.requestsFinished++;
         if (queue.length < 1) $(ouapi).trigger('ouapi.empty');
@@ -214,8 +214,8 @@
         @return bool - true if connections available, false if not (which also queues the method)
     */
     function checkQueue(group, method, args) {
-        console.log("--checkQueue--");
-        debugger;
+        void 0;
+        
 
         // grab deferred (always last element)
         var deferred = args[args.length - 1];
@@ -232,7 +232,7 @@
     var ouapi = {
         snippets: {
             add: function add(name, path, site, description, category, deferred) {
-                console.log("--addSnippet--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/addsnippet';
@@ -255,7 +255,7 @@
                 return deferred.promise();
             },
             createCategory: function createCategory(name, site, deferred) {
-                console.log("--createSnippetCategory--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/addcategory';
@@ -273,8 +273,50 @@
                 });
                 return deferred.promise();
             },
-            list: function list(site, deferred) {
-                console.log("--listSnippets/Categories--");
+            edit: function edit(name, path, site, description, category, newName, newPath, newDescription, newCategory, deferred) {
+                void 0;
+
+                var protocol = "http:";
+                var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/editsnippet';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    snippet: name,
+                    path: path,
+                    site: site,
+                    description: description,
+                    category: category,
+                    selected: false
+                };
+
+                if (typeof newName != 'undefined' && newName != name) params.name = newName;else params.name = name;
+                if (typeof newPath != 'undefined' && newPath != path) params.path = newPath;
+                if (typeof newDescription != 'undefined' && newDescription != description) params.description = newDescription;
+                if (typeof newCategory != 'undefined' && newCategory != category) {
+                    params.category = newCategory;
+                    params.old_category = category;
+                }
+
+                ajaxC({
+                    type: "POST",
+                    url: endpoint,
+                    data: params,
+                    deferred: deferred
+                });
+                return deferred.promise();
+            }
+
+            //snippet:hgd - old name
+            //name: hdg2 - new name
+            //path:j - new
+            //description:d - new
+            //category:Calendars
+            //selected:false
+            //old_category:main
+            //site:_test
+
+            , list: function list(site, deferred) {
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/list';
@@ -290,9 +332,326 @@
                     deferred: deferred
                 });
                 return deferred.promise();
-            },
-            remove: function remove(name, site, category, deferred) {
-                console.log("--removeSnippet--");
+            }
+
+            /*
+            OUTPUT:
+            [
+              [
+                {
+                  "Main Content": [
+                    {
+                      "snippet": "Link List (2 columns)",
+                      "path": "/_resources/snippets/cantina_two_col.html",
+                      "description": "List of links with image and title"
+                    },
+                    {
+                      "snippet": "Link List (3 columns)",
+                      "path": "/_resources/snippets/cantina.html",
+                      "description": "List of links with image and title"
+                    },
+                    {
+                      "snippet": "Page Feature",
+                      "path": "/_resources/snippets/transmission_announcement.html",
+                      "description": "Page-wide gray bar with image, title, text and link"
+                    },
+                    {
+                      "snippet": "Preview (4 columns)",
+                      "path": "/_resources/snippets/fleet.html",
+                      "description": "Four column layout with linked image and text"
+                    },
+                    {
+                      "snippet": "Preview (1 column)",
+                      "path": "/_resources/snippets/fleet_onecol.html",
+                      "description": "One column layout with linked image and text"
+                    },
+                    {
+                      "snippet": "Show/Hide Accordion",
+                      "path": "/_resources/snippets/accordion.html",
+                      "description": "Show/Hide accordion with title and text content"
+                    },
+                    {
+                      "snippet": "Teaser",
+                      "path": "/_resources/snippets/teaser_w_photo.html",
+                      "description": "List of items each having a photo, title, description and optional links"
+                    },
+                    {
+                      "snippet": "Teaser (no image)",
+                      "path": "/_resources/snippets/teaser_no_photo.html",
+                      "description": "List of items each having a title, description and optional links"
+                    },
+                    {
+                      "snippet": "Button",
+                      "path": "/_resources/snippets/button.html",
+                      "description": "Clickable button with link"
+                    },
+                    {
+                      "snippet": "Table",
+                      "path": "/_resources/snippets/table.html",
+                      "description": "A simple table"
+                    },
+                    {
+                      "snippet": "Two-Column Layout",
+                      "path": "/_resources/snippets/two_columns.html",
+                      "description": "Splits a page into 2 columns"
+                    },
+                    {
+                      "snippet": "EMS Event Feed",
+                      "path": "/_resources/snippets/ksu_campus_cal.html",
+                      "description": "An event feed from EMS"
+                    },
+                    {
+                      "snippet": "Course Listing",
+                      "path": "/_resources/snippets/courses_listing.html",
+                      "description": "Lists all graduate and/or undergraduate courses for a given course prefix"
+                    },
+                    {
+                      "snippet": "Tumblr Feed",
+                      "path": "/_resources/snippets/tumblr_feed.html",
+                      "description": "Pulls content from a tumblr account and displays it"
+                    },
+                    {
+                      "snippet": "Preview (3 columns)",
+                      "path": "/_resources/snippets/fleet_threecol.html",
+                      "description": "Three column layout with linked image and text"
+                    },
+                    {
+                      "snippet": "Gold Header",
+                      "path": "/_resources/snippets/gold_header.html",
+                      "description": "A gold header"
+                    },
+                    {
+                      "snippet": "Twitter Feed",
+                      "path": "/_resources/snippets/twitter_feed.html",
+                      "description": "A twitter feed"
+                    },
+                    {
+                      "snippet": "Long List (Alphabetized)",
+                      "path": "/_resources/snippets/long_list_alphabetized.html",
+                      "description": "Automatically alphabetizes the content and outputs a zebra-striped list"
+                    },
+                    {
+                      "snippet": "Faculty/Staff Listing",
+                      "path": "/_resources/snippets/faculty_staff_listing.html",
+                      "description": "An alphabetical listing of faculty and staff"
+                    },
+                    {
+                      "snippet": "Academic Calendar",
+                      "path": "/_resources/snippets/academic_calendar.html",
+                      "description": "Pulls events from EMS to create an academic calendar for the year"
+                    },
+                    {
+                      "snippet": "Calendar Listing",
+                      "path": "/_resources/snippets/calendar_listing.html",
+                      "description": "A calendar listing of events from an OwlLife or Master Calendar RSS feed"
+                    },
+                    {
+                      "snippet": "Preview (2 columns)",
+                      "path": "/_resources/snippets/fleet_twocol.html",
+                      "description": "Two column layout with linked image and text"
+                    },
+                    {
+                      "snippet": "Heading with Link",
+                      "path": "/_resources/snippets/heading_with_link.html",
+                      "description": "A heading with a link beside it"
+                    }
+                  ]
+                },
+                {
+                  "Utility": [
+                    {
+                      "snippet": "Utility - Index List",
+                      "path": "/_resources/snippets/index-listing.html",
+                      "description": "Pulls section nav for overview page"
+                    },
+                    {
+                      "snippet": "Utility - Widgets Home",
+                      "path": "/_resources/snippets/modules.pcf",
+                      "description": "Complete Listing of All Modules / Widgets / Snippets"
+                    }
+                  ]
+                },
+                {
+                  "training": [
+                    {
+                      "snippet": "Teaser",
+                      "path": "/_resources/snippets/teaser_w_photo.html",
+                      "description": ""
+                    }
+                  ]
+                },
+                {
+                  "Blog": [
+                    {
+                      "snippet": "Image with Caption",
+                      "path": "/_resources/snippets/blog/img-caption.html",
+                      "description": ""
+                    },
+                    {
+                      "snippet": "Blog Posts By Category",
+                      "path": "/_resources/snippets/blog_posts_by_category.html",
+                      "description": "Pull blog posts based on a category"
+                    },
+                    {
+                      "snippet": "Blog Posts By Tag",
+                      "path": "/_resources/snippets/blog_posts_by_tag.html",
+                      "description": "Pull blog posts based on a tag"
+                    },
+                    {
+                      "snippet": "Blog Recent Posts",
+                      "path": "/_resources/snippets/blog_recent_posts.html",
+                      "description": "Pull recent posts"
+                    }
+                  ]
+                },
+                {
+                  "Sidebar": [
+                    {
+                      "snippet": "Feature",
+                      "path": "/_resources/snippets/tie_bomber.html",
+                      "description": "Gray content box"
+                    },
+                    {
+                      "snippet": "Link List",
+                      "path": "/_resources/snippets/tie_advanced.html",
+                      "description": "List of links with gold title"
+                    },
+                    {
+                      "snippet": "Social Media",
+                      "path": "/_resources/snippets/social_media.html",
+                      "description": "Displays your social media icons with links"
+                    },
+                    {
+                      "snippet": "Feature (no background)",
+                      "path": "/_resources/snippets/tie_fighter.html",
+                      "description": "Content box with blue title and no background"
+                    }
+                  ]
+                },
+                {
+                  "All Snippets": [
+                    {
+                      "snippet": "Utility - Widgets Home",
+                      "path": "/_resources/snippets/modules.pcf",
+                      "description": "Complete Listing of All Modules / Widgets / Snippets"
+                    },
+                    {
+                      "snippet": "Sidebar - Feature (no background)",
+                      "path": "/_resources/snippets/tie_fighter.inc",
+                      "description": "Content box with blue title and no background"
+                    },
+                    {
+                      "snippet": "Sidebar - Feature",
+                      "path": "/_resources/snippets/tie_bomber.html",
+                      "description": "Gray content box"
+                    },
+                    {
+                      "snippet": "Main Content - Link List (3 columns)",
+                      "path": "/_resources/snippets/cantina.html",
+                      "description": "List of links with image and title"
+                    },
+                    {
+                      "snippet": "Main Content - Preview (4 columns)",
+                      "path": "/_resources/snippets/fleet.html",
+                      "description": "Four column layout with linked image and text"
+                    },
+                    {
+                      "snippet": "Main Content - Link List (2 columns)",
+                      "path": "/_resources/snippets/cantina_two_col.html",
+                      "description": "List of links with image and title"
+                    },
+                    {
+                      "snippet": "ksu_group",
+                      "path": "/_resources/snippets/ksu_group.html",
+                      "description": "Use this table snippet to insert multiple snippets next to each other on a page. "
+                    },
+                    {
+                      "snippet": "Main Content - Teaser",
+                      "path": "/_resources/snippets/teaser_w_photo.html",
+                      "description": "??????\r\n\r\nTeaser element with photo. Use KSU Teaser Group Table Snippet to have proper formatting. Can be used on page by itself but will stretch the content. "
+                    },
+                    {
+                      "snippet": "Main Content - Teaser (no image)",
+                      "path": "/_resources/snippets/teaser_no_photo.html",
+                      "description": "???????\r\n\r\n\r\nTeaser element without a photo. Use KSU Teaser Group Table Snippet to have proper formatting. Can be used on page by itself but will stretch the content. "
+                    },
+                    {
+                      "snippet": "Sidebar - Link List",
+                      "path": "/_resources/snippets/tie_advanced.html",
+                      "description": "List of links with gold title"
+                    },
+                    {
+                      "snippet": "Home - User Groups",
+                      "path": "/_resources/snippets/user_groups.html",
+                      "description": "Six user group table for image, title and content link."
+                    },
+                    {
+                      "snippet": "Main Content - Page Feature",
+                      "path": "/_resources/snippets/transmission_announcement.html",
+                      "description": "Page-wide gray bar with image, title, text and link"
+                    },
+                    {
+                      "snippet": "Home - News Feed",
+                      "path": "/_resources/snippets/news_feed.html",
+                      "description": "Home Events feed table with title, url(rss feed.xml), number of items, category and section title/link. "
+                    },
+                    {
+                      "snippet": "Home - Events Feed",
+                      "path": "/_resources/snippets/events_feed.html",
+                      "description": "Home Events feed table with title, url(rss feed.xml), number of items, category and section title/link. "
+                    },
+                    {
+                      "snippet": "Home - Cantina",
+                      "path": "/_resources/snippets/home_cantina.html",
+                      "description": "Table with image, heading, short description and content link(read more) from the home page. "
+                    },
+                    {
+                      "snippet": "General - Button",
+                      "path": "/_resources/snippets/button.html",
+                      "description": "Clickable button with link"
+                    },
+                    {
+                      "snippet": "News - Landing RSS",
+                      "path": "/_resources/snippets/news_landing_feed.html",
+                      "description": "News Landing Page Feed. "
+                    },
+                    {
+                      "snippet": "News - Social Media Feature",
+                      "path": "/_resources/snippets/social_tie_bomber.html",
+                      "description": "Social tie bomber for news landing page."
+                    },
+                    {
+                      "snippet": "Main Content - Preview (1 column)",
+                      "path": "/_resources/snippets/fleet_onecol.html",
+                      "description": "One column layout with linked image and text"
+                    },
+                    {
+                      "snippet": "News - HootFeed RSS",
+                      "path": "/_resources/snippets/ksu_hootfeed.html",
+                      "description": "KSU Hoots. Feed widget from news landing page.. "
+                    },
+                    {
+                      "snippet": "News - Around Campus RSS",
+                      "path": "/_resources/snippets/ksu_campus_cal.html",
+                      "description": "KSU around campus calendar widget from news landing page. "
+                    },
+                    {
+                      "snippet": "Main Content - Show/Hide Accordion",
+                      "path": "/_resources/snippets/accordion.html",
+                      "description": "Show/Hide accordion with title and text content"
+                    },
+                    {
+                      "snippet": "Utility - Index List",
+                      "path": "/_resources/snippets/index-listing.html",
+                      "description": "Pulls section nav for overview page"
+                    }
+                  ]
+                }
+              ]
+            ]
+            */
+            , remove: function remove(name, site, category, deferred) {
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/removesnippet';
@@ -312,7 +671,7 @@
                 return deferred.promise();
             },
             removeCategory: function removeCategory(name, site, deferred) {
-                console.log("--removeSnippetCategory--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/snippets/removecategory';
@@ -334,7 +693,7 @@
 
         files: {
             checkedOut: function checkedOut(site, deferred) {
-                console.log("--checkedOutFiles--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/checkedout';
@@ -352,7 +711,7 @@
                 return deferred.promise();
             },
             checkin: function checkin(path, site, deferred) {
-                console.log("--checkinFile--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/checkin';
@@ -371,7 +730,7 @@
                 return deferred.promise();
             },
             checkout: function checkout(path, site, deferred) {
-                console.log("--checkoutFile--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/checkout';
@@ -390,7 +749,7 @@
                 return deferred.promise();
             },
             create: function create(filename, path, site, overwrite, deferred) {
-                console.log("--createFile--");
+                void 0;
                 if (typeof overwrite == 'undefined') overwrite = false;
 
                 var protocol = "http:";
@@ -414,8 +773,9 @@
                 });
                 return deferred.promise();
             },
+            // path can be array
             delete: function _delete(path, site, remote, deferred) {
-                console.log("--deleteFile/Folder--");
+                void 0;
                 if (typeof remote == 'undefined') remote = false;
 
                 var endpoint = gadget.get('apihost') + '/files/delete';
@@ -436,7 +796,7 @@
                 return deferred.promise();
             },
             dependents: function dependents(path, site, deferred) {
-                console.log("--fileDependents--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/dependents';
@@ -455,7 +815,7 @@
                 return deferred.promise();
             },
             get: function get(path, site, deferred) {
-                console.log("--getFiles--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/files/list';
                 var params = {
@@ -474,7 +834,7 @@
                 return deferred.promise();
             },
             info: function info(path, site, deferred) {
-                console.log("--fileInfo--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/info';
@@ -493,7 +853,7 @@
                 return deferred.promise();
             },
             list: function list(path, site, deferred) {
-                console.log("--listFiles--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/list';
@@ -512,7 +872,7 @@
                 return deferred.promise();
             },
             new_folder: function new_folder(name, path, site, deferred) {
-                console.log("--new_folder--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/files/new_folder';
                 var params = {
@@ -532,7 +892,7 @@
                 return deferred.promise();
             },
             publish: function publish(path, site, versionDesc, deferred) {
-                console.log("--publishFile--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/publish';
@@ -553,7 +913,7 @@
             },
             // paths can be an array
             publishMulti: function publishMulti(paths, site, versionDesc, includeCheckedout, includeScheduled, includePendingApproval, changedOnly, useLastPublishedVersion, includeUnpublishedDependencies, deferred) {
-                console.log("--publishMultiFile--");
+                void 0;
                 if (typeof includeCheckedout == 'undefined') includeCheckedout = false;
                 if (typeof includeScheduled == 'undefined') includeScheduled = false;
                 if (typeof includePendingApproval == 'undefined') includePendingApproval = false;
@@ -610,7 +970,7 @@
             */
             , // path can be string or array of strings
             recycle: function recycle(path, site, deferred) {
-                console.log("--recycleFiles--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/files/recycle';
                 var params = {
@@ -629,7 +989,7 @@
                 return deferred.promise();
             },
             save: function save(path, site, content, deferred) {
-                console.log("--saveFile--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/save';
@@ -648,8 +1008,8 @@
                 });
                 return deferred.promise();
             },
-            source: function source(site, path, brokenTags, deferred) {
-                console.log("--removeSnippet--");
+            source: function source(path, site, brokenTags, deferred) {
+                void 0;
                 if (typeof brokenTags == 'undefined') brokenTags = true;
 
                 var protocol = "http:";
@@ -674,7 +1034,7 @@
         directories: {
             //TODO: test this
             settings: function settings(path, site, deferred) {
-                console.log("--directorySettings--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/directories/settings';
@@ -700,7 +1060,7 @@
             // paths array - strings of paths to search
             find: function find(site, _find, caseSensitive, includeLocked, paths, type, negexts, extensions, deferred) {
                 //    console.log("this: ", this);
-                console.log("--siteFind--");
+                void 0;
                 if (typeof caseSensitive == 'undefined') caseSensitive = false;
                 if (typeof includeLocked == 'undefined') includeLocked = true;
                 //    if (typeof paths == 'undefined') paths = "";
@@ -791,9 +1151,9 @@
 
             , list: function list(site, account, count, deferred) {
                 if (typeof count == 'undefined') count = 5000;
-                console.log("--sitesList--");
+                void 0;
 
-                console.log("arguments: ", arguments);
+                void 0;
 
                 if (typeof site == 'undefined') site = gadget.get('site');
                 if (typeof account == 'undefined') account = gadget.get('account');
@@ -816,10 +1176,10 @@
                 return deferred.promise();
             },
             test: function test(site, deferred) {
-                console.log("--test--");
+                void 0;
 
                 ouapi.sites.list(site).done(function (sites) {
-                    console.log("sites: ", sites);
+                    void 0;
 
                     // list snippets
                     var protocol = "http:";
@@ -847,7 +1207,7 @@
             // TODO: figure out payload (file)
             // asset Id is also the same as the dependency tag (only numbers)
             add_image: function add_image(site, assetId, image, thumb_width, thumb_height, deferred) {
-                console.log("--assetAddImage--");
+                void 0;
                 if (typeof thumb_width == 'undefined') thumb_width = 100;
                 if (typeof thumb_height == 'undefined') thumb_height = 100;
 
@@ -929,7 +1289,7 @@
             			}*/
             , // asset Id is also the same as the dependency tag (only numbers)
             checkin: function checkin(site, assetId, deferred) {
-                console.log("--checkinAsset--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/assets/checkin';
                 var params = {
@@ -949,7 +1309,7 @@
             },
             // asset Id is also the same as the dependency tag (only numbers)
             checkout: function checkout(site, assetId, deferred) {
-                console.log("--checkoutAsset--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/assets/checkout';
                 var params = {
@@ -969,7 +1329,7 @@
             },
             // asset Id is also the same as the dependency tag (only numbers) - can be array
             delete: function _delete(site, assetId, deferred) {
-                console.log("--deleteAsset--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/assets/delete';
                 var params = {
@@ -989,7 +1349,7 @@
             },
             // asset Id is also the same as the dependency tag (only numbers)
             dependents: function dependents(assetId, site, deferred) {
-                console.log("--assetDependents--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/dependents';
@@ -1009,7 +1369,7 @@
             },
             // asset Id is also the same as the dependency tag (only numbers)
             info: function info(site, assetId, deferred) {
-                console.log("--assetInfo--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/assets/info';
                 var params = {
@@ -1039,7 +1399,7 @@
             asset:145350
             */
             , list: function list(site, count, start, sortKey, sortOrder, deferred) {
-                console.log("--listAssets--");
+                void 0;
                 if (typeof count == 'undefined') count = 100;
                 if (typeof start == 'undefined') start = 1;
                 if (typeof sortKey == 'undefined') sortKey = 'name';
@@ -1150,7 +1510,7 @@
                 [{"to":"toemail@email.com","from":"from3mail@email.com","subject":"Subject line","body":"A cool\nbody \nemail\n\nyeah"}]
             */
             newForm: function newForm(name, site, description, formContents, emails, group, readGroup, tags, lockToSite, extra, deferred) {
-                console.log("--newFormAsset--");
+                void 0;
                 if (typeof formContents == 'undefined' || formContents == '') formContents = '[]';
                 if (typeof emails == 'undefined' || emails == '') emails = '[]';
                 if (typeof group == 'undefined') group = 'Everyone';
@@ -1223,7 +1583,7 @@
                 advanced: string
             */
             newImageGallery: function newImageGallery(name, site, description, group, readGroup, tags, lockToSite, extra, deferred) {
-                console.log("--newImageGalleryAsset--");
+                void 0;
                 if (typeof group == 'undefined') group = 'Everyone';
                 if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
@@ -1280,7 +1640,7 @@
             */
             , // tags can be an array
             newPlainText: function newPlainText(name, site, description, content, group, readGroup, tags, lockToSite, deferred) {
-                console.log("--newPlainTextAsset--");
+                void 0;
                 if (typeof group == 'undefined') group = 'Everyone';
                 if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
@@ -1338,7 +1698,7 @@
                 matchCase: bool
             */
             newSourceCode: function newSourceCode(name, site, description, content, group, readGroup, tags, lockToSite, extra, deferred) {
-                console.log("--newSourceCodeAsset--");
+                void 0;
                 if (typeof group == 'undefined') group = 'Everyone';
                 if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
@@ -1393,7 +1753,7 @@
             */
             , // tags can be an array
             newWebContent: function newWebContent(name, site, description, content, group, readGroup, tags, lockToSite, deferred) {
-                console.log("--newWebContentAsset--");
+                void 0;
                 if (typeof group == 'undefined') group = 'Everyone';
                 if (typeof readGroup == 'undefined') readGroup = 'Everyone';
                 if (typeof lockToSite == 'undefined') lockToSite = true;
@@ -1443,7 +1803,7 @@
             , // forms & galleries use .json - others use .html
             //TODO: figure out best way to handle .json vs .html file extensions
             publish: function publish(site, filename, versionDesc, deferred) {
-                console.log("--publishAsset--");
+                void 0;
 
                 var protocol = "http:";
                 var endpoint = /*protocol +*/gadget.get('apihost') + '/files/publish';
@@ -1464,7 +1824,7 @@
             },
             // asset Id is also the same as the dependency tag (only numbers)
             view: function view(site, assetId, deferred) {
-                console.log("--viewAsset--");
+                void 0;
 
                 var endpoint = gadget.get('apihost') + '/assets/view';
                 var params = {
@@ -1510,7 +1870,7 @@
 
         util: {
             findReplaceStatus: function findReplaceStatus(site, searchId) {
-                console.log("--findReplaceStatus--");
+                void 0;
                 var deferred = new $.Deferred();
 
                 var endpoint = gadget.get('apihost') + '/sites/findreplacestatus';
@@ -1549,35 +1909,35 @@
                 $.each(promises, function (i, prom) {
                     states += prom.state() + ", ";
                 });
-                console.log("ouapi promise states: " + states);
+                void 0;
             }
         },
 
         callbacks: {
             // runs when a request completes (success or fail)
             onComplete: function onComplete(callback) {
-                console.log("\n **** ON COMPLETE CALLS **** \n");
+                void 0;
                 $(this).on("ouapi.complete", function (e, data) {
                     callback && callback(data);
                 });
             },
             // runs when queue is empty
             onEmpty: function onEmpty(callback) {
-                console.log("\n **** ON EMPTY CALLS **** \n");
+                void 0;
                 $(this).on("ouapi.empty", function (e) {
                     callback && callback();
                 });
             },
             // runs when a request is not successful
             onError: function onError(callback) {
-                console.log("\n **** ON ERROR CALLS **** \n");
+                void 0;
                 $(this).on("ouapi.error", function (e, data) {
                     callback && callback(data);
                 });
             },
             // runs when a request is successful
             onSuccess: function onSuccess(callback) {
-                console.log("\n **** ON SUCCESS CALLS **** \n");
+                void 0;
                 $(this).on("ouapi.success", function (e, data) {
                     callback && callback(data);
                 });
@@ -1594,18 +1954,18 @@
             // of the jQuery Deferred object that this method returns, as in
             // `gadget.ready().then(myFunc)`.
 
-            console.log("ready() start");
+            void 0;
 
             var deferred = new $.Deferred();
             if (this.isReady) {
-                console.log("ready - true");
+                void 0;
                 isReady = true;
                 callback && callback();
                 deferred.resolve();
             } else {
-                console.log("ready - false");
+                void 0;
                 $(this).one('ouapi.ready', function () {
-                    console.log("ready callback");
+                    void 0;
                     callback && callback();
                     deferred.resolve();
                 });
@@ -1617,7 +1977,7 @@
         }
     };
 
-    console.log("api: ", ouapi);
+    void 0;
 
     var globalCodeMethodExceptions = ['ready', 'reports', 'callbacks', 'util']; // root-level keys in which to skip adding global code
     var bindMethodExceptions = ['callbacks']; // root-level keys in which to skip binding to ouapi in its literal position
@@ -1648,10 +2008,10 @@
             if (typeof originalMethod === 'function') {
                 ouapi[group][method] = function (originalMethod, group, method) {
                     return function () {
-                        debugger;
+                        
                         //console.log("closure - method: ", method);
                         //console.log("closure - group: ", group);							
-                        console.log("original method # params: ", originalMethod.length);
+                        void 0;
                         // convert arguments to array
                         var args = Array.prototype.slice.call(arguments);
 
@@ -1664,7 +2024,7 @@
                             }
                         }
 
-                        console.log("args (arguments): ", args);
+                        void 0;
                         // use deferred if present. Else, make one
                         var deferred = args[args.length - 1];
                         if (!isDeferred(deferred)) {
