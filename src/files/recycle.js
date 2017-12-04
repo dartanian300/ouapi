@@ -10,11 +10,21 @@ recycle: function(path, site, deferred) {
         path: path
     };
 
+    var intDeferred = new $.Deferred();
     ajaxC({
         type: "POST",
         url: endpoint, 
         data: $.param(params, true),
-        deferred: deferred
+        deferred: intDeferred
+    }).then(function(resp){
+        return ouapi.util.fileStatus(site, resp.id);
+    }).then(function(r){
+        deferred.resolve(r);
+    }).fail(function(data){
+        deferred.reject(data);
     });
+    
+    
+    
     return deferred.promise();
 }

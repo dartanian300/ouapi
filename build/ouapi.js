@@ -980,12 +980,20 @@
                     path: path
                 };
 
+                var intDeferred = new $.Deferred();
                 ajaxC({
                     type: "POST",
                     url: endpoint,
                     data: $.param(params, true),
-                    deferred: deferred
+                    deferred: intDeferred
+                }).then(function (resp) {
+                    return ouapi.util.fileStatus(site, resp.id);
+                }).then(function (r) {
+                    deferred.resolve(r);
+                }).fail(function (data) {
+                    deferred.reject(data);
                 });
+
                 return deferred.promise();
             },
             save: function save(path, site, content, deferred) {
@@ -1869,6 +1877,41 @@
         },
 
         util: {
+            fileStatus: function fileStatus(site, searchId) {
+                void 0;
+                var deferred = new $.Deferred();
+
+                var endpoint = gadget.get('apihost') + '/files/status';
+                var params = {
+                    authorization_token: gadget.get('token'),
+
+                    id: searchId,
+                    site: site
+                };
+                var pingInterval = 1000;
+
+                var interval = setInterval(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: endpoint,
+                        data: params
+                    }).then(function (statusResponse) {
+                        if (statusResponse.error == true) {
+                            clearInterval(interval);
+                            deferred.reject(statusResponse);
+                        }
+                        if (statusResponse.finished == true) {
+                            clearInterval(interval);
+                            deferred.resolve(statusResponse);
+                        }
+                    }, function (resp) {
+                        clearInterval(interval);
+                        deferred.reject(resp);
+                    });
+                }, pingInterval);
+
+                return deferred.promise();
+            },
             findReplaceStatus: function findReplaceStatus(site, searchId) {
                 void 0;
                 var deferred = new $.Deferred();
