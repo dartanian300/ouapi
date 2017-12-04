@@ -80,7 +80,7 @@ gulp.task('remove:tmp', function(){
 gulp.task('clean:js', function(){
     return gulp.src(folder.build + 'ouapi.js')
     .pipe(babel())
-    //.pipe(stripDebug())
+    .pipe(stripDebug())
     .pipe(gulp.dest(folder.build))
     .pipe(rename('ouapi.min.js'))
     .pipe(uglify())
