@@ -2,14 +2,14 @@ fileStatus: function(site, searchId){
     console.log("--fileStatus--");
     var deferred = new $.Deferred();
 
-    var endpoint = gadget.get('apihost') + '/files/status';
+    var endpoint = gadget.get('apihost') + '/workers/status';
     var params = {
         authorization_token: gadget.get('token'), 
 
-        id: searchId, 
+        key: searchId, 
         site: site
     };
-    var pingInterval = 1000;
+    var pingInterval = 2000;
     
     var interval = setInterval(function(){
         $.ajax({
